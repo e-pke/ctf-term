@@ -22,9 +22,9 @@
       "users_file": "",
       "pass_wordlist": "/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt",
       "hash_file": "",
-      "file_wordlist": "/usr/share/seclists/Passwords/Discobery/Web-Content/raft-medium-files.txt",
-      "dir_wordlist": "/usr/share/seclists/Passwords/Discobery/Web-Content/raft-medium-directories.txt",
-      "dns_wordlist": "/usr/share/seclists/Passwords/Discobery/DNS/subdomains-top1million-20000.txt",
+      "file_wordlist": "/usr/share/seclists/Passwords/Discovery/Web-Content/raft-medium-files.txt",
+      "dir_wordlist": "/usr/share/seclists/Passwords/Discovery/Web-Content/raft-medium-directories.txt",
+      "dns_wordlist": "/usr/share/seclists/Passwords/Discovery/DNS/subdomains-top1million-20000.txt",
       "share_name": "",
       "spn": "",
       "ca_name": "",
@@ -121,7 +121,7 @@
         "id": "curl",
         "label": "curl",
         "title": "cURL",
-        "description": "Inspeção de cabeçalhos, respostas, métodos e conteúdo web.",
+        "description": "Uma curadoria de comandos para facilitar o envio de requisições personalizadas usando cURL.",
         "symbol": "↗"
       }
     ],
@@ -779,5 +779,5 @@
       }
     ]
   },
-  "exportedAt": "2026-11-01T19:36:24.243Z"
+  "exportedAt": "2026-11-01T20:00:07.349Z"
 }
