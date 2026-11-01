@@ -1,0 +1,1682 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#212121">
+  <meta name="description" content="Cheatsheets personalizáveis para enumeração em laboratórios.">
+  <title>CTF.Term</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+:root {
+  color-scheme: dark;
+  --bg: #212121;
+  --surface: #292929;
+  --surface-2: #313131;
+  --surface-3: #3a3a3a;
+  --line: #444444;
+  --line-soft: #383838;
+  --fg: #e8ebef;
+  --muted: #a7adb6;
+  --muted-2: #7f8790;
+
+  /* paleta da interface */
+  --rose-ui: #c76570;
+  --green-ui: #a5bc8e;
+  --sand-ui: #ddc282;
+  --blue-ui: #85a0bc;
+  --mauve-ui: #b290b1;
+  --cyan-ui: #84b2c3;
+  --light-ui: #c5c7ce;
+
+  /* highlights inspirados no Nord */
+  --blue: #81a1c1;
+  --cyan: #88c0d0;
+  --teal: #8fbcbb;
+  --green: #a3be8c;
+  --yellow: #ebcb8b;
+  --red: #bf616a;
+  --purple: #b48ead;
+  --white: #eceff4;
+  --font: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+html { min-height: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--fg);
+  background: var(--bg);
+  font-family: var(--font);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .46; }
+::selection { background: var(--blue-ui); color: #161616; }
+:focus-visible { outline: 2px solid var(--cyan-ui); outline-offset: 3px; }
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: var(--bg);
+  border-right: 1px solid var(--line-soft);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 640px;
+  padding: 28px 16px 24px;
+  z-index: 10;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 10px 28px;
+}
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--muted);
+  background: #151414;
+  border-radius: 12px;
+  color: var(--white);
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+  font-weight: 800;
+}
+.brand-title {
+  color: var(--white);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -.8px;
+}
+.accent { color: var(--cyan-ui); }
+.brand-sub {
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.sidebar-group-title {
+  color: var(--muted-2);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 11px 11px;
+}
+.main-nav { display: flex; flex-direction: column; gap: 6px; }
+.sidebar-nav-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 0 -6px;
+  padding: 0 6px 9px;
+  scrollbar-color: #4a4a4a transparent;
+  scrollbar-width: thin;
+}
+.nav-item {
+  position: relative;
+  border: 1px solid transparent;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px;
+  border-radius: 12px;
+  text-align: left;
+  background: transparent;
+  color: #aeb5bd;
+  transition: background .15s, color .15s, border-color .15s;
+  min-height: 46px;
+}
+.nav-item:hover {
+  background: rgba(255,255,255,.04);
+  color: var(--white);
+}
+.nav-item.active {
+  background: rgba(133,160,188,.14);
+  border-color: rgba(133,160,188,.26);
+  color: var(--cyan-ui);
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 26px;
+  background: var(--cyan-ui);
+  border-radius: 3px;
+}
+.nav-symbol {
+  width: 22px;
+  text-align: center;
+  font-size: 17px;
+  opacity: .85;
+}
+.nav-label {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+}
+.nav-count {
+  color: var(--muted-2);
+  font-size: 10px;
+}
+.nav-item.active .nav-count { color: var(--cyan-ui); }
+.nav-create {
+  width: 100%;
+  margin-top: 11px;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-align: left;
+  padding: 10px 14px;
+  border: 1px dashed #5a5a5a;
+  background: rgba(132,178,195,.06);
+  border-radius: 12px;
+  color: var(--cyan-ui);
+  font-size: 11px;
+  font-weight: 700;
+  transition: background .15s, border-color .15s;
+}
+.nav-create:hover { background: rgba(132,178,195,.12); border-color: var(--cyan-ui); }
+.nav-create span { font-size: 20px; line-height: 1; }
+.sidebar-note {
+  margin-top: 18px;
+  padding: 16px 13px;
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  background: rgba(255,255,255,.03);
+}
+.side-note-label {
+  font-size: 10px;
+  color: var(--green-ui);
+  font-weight: 700;
+  letter-spacing: .7px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.sidebar-note p {
+  line-height: 1.8;
+  font-size: 10px;
+  color: var(--muted);
+  margin: 11px 0 0;
+}
+.sidebar-footer {
+  border-top: 1px solid var(--line-soft);
+  padding: 17px 10px 0;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.9;
+  letter-spacing: .4px;
+}
+.footer-muted { color: var(--muted-2); letter-spacing: 0; }
+.sep { color: var(--line); padding: 0 3px; }
+.pulse-dot, .status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green-ui);
+  display: inline-block;
+  box-shadow: 0 0 8px rgba(165,188,142,.35);
+}
+
+.workspace { min-width: 0; }
+.topbar {
+  min-height: 74px;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(22px, 4vw, 56px);
+  gap: 16px;
+  background: rgba(255,255,255,.02);
+}
+.header-left, .header-right { display: flex; align-items: center; gap: 11px; }
+.breadcrumb { font-size: 12px; color: var(--muted); }
+.breadcrumb strong { color: var(--fg); font-weight: 600; }
+.crumb-slash { padding: 0 10px; color: #666; }
+.target-pill, .status-pill {
+  white-space: nowrap;
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.03);
+  font-weight: 600;
+  font-size: 11px;
+}
+.target-pill { color: var(--green-ui); }
+.status-pill { color: var(--muted); }
+.button {
+  border-radius: 12px;
+  padding: 10px 13px;
+  display: inline-flex;
+  gap: 9px;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  border: 1px solid transparent;
+  color: var(--fg);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background .15s, border-color .15s;
+}
+.button.subtle {
+  background: rgba(255,255,255,.04);
+  border-color: var(--line);
+  color: #cfd5dc;
+}
+.button.subtle:hover { background: rgba(255,255,255,.07); }
+.button.primary {
+  background: var(--cyan-ui);
+  border-color: var(--cyan-ui);
+  color: #1c1c1c;
+}
+.button.primary:hover { filter: brightness(1.06); }
+.button.danger {
+  color: #f1bcc2;
+  border: 1px solid rgba(199,101,112,.35);
+  background: rgba(199,101,112,.08);
+}
+.button.danger:hover { background: rgba(199,101,112,.16); }
+.button.ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--muted);
+}
+.button.ghost:hover { border-color: var(--blue-ui); color: var(--fg); }
+.icon-button {
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+}
+.icon-button:hover { color: var(--fg); background: rgba(255,255,255,.06); }
+.mobile-only { display: none; }
+
+.main-content {
+  max-width: 1520px;
+  margin: auto;
+  padding: 40px clamp(22px, 4vw, 56px) 42px;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.65px;
+  font-weight: 700;
+  color: var(--cyan-ui);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.eyebrow-square {
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--cyan-ui);
+  display: inline-block;
+  transform: rotate(45deg);
+}
+.heading-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 24px;
+}
+.page-heading h1 {
+  font-size: clamp(28px, 3vw, 36px);
+  color: var(--white);
+  letter-spacing: -1.2px;
+  margin: 14px 0 9px;
+  line-height: 1.2;
+}
+.heading-cursor { color: var(--cyan-ui); }
+.page-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+  max-width: 900px;
+}
+.heading-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.content-panel {
+  padding-top: 6px;
+}
+.terminal-comment {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.9;
+}
+.terminal-comment .hash { color: var(--muted-2); }
+.control-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 22px;
+}
+.filter-field {
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.035);
+  color: var(--fg);
+  padding: 12px 14px;
+  border-radius: 14px;
+  width: min(430px, 100%);
+  min-height: 42px;
+  font-size: 11px;
+}
+.filter-field::placeholder { color: var(--muted-2); }
+.counter { color: var(--muted-2); font-size: 10px; }
+.count-accent { color: var(--cyan-ui); }
+
+.commands-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.command-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255,255,255,.035);
+  overflow: hidden;
+  transition: border-color .15s, transform .15s, background .15s;
+}
+.command-card:hover {
+  border-color: #595959;
+  background: rgba(255,255,255,.045);
+  transform: translateY(-1px);
+}
+.command-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px 10px;
+}
+.command-title {
+  color: var(--green);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.command-title .hash { color: var(--muted-2); padding-right: 7px; }
+.command-desc {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 5px 0 0;
+}
+.command-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+.card-small-button {
+  height: 31px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  border-radius: 10px;
+  padding: 0 10px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.card-small-button:hover:not(:disabled) { color: var(--white); border-color: var(--blue-ui); }
+.card-small-button.copied { color: var(--green); border-color: var(--green); }
+.command-code {
+  overflow-x: auto;
+  padding: 8px 20px 16px;
+}
+.command-code pre {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 12px;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  color: var(--fg);
+}
+.shell-dollar { color: var(--blue); user-select: none; padding-right: 9px; }
+.tok-command { color: var(--cyan); font-weight: 700; }
+.tok-flag { color: var(--blue); }
+.tok-string { color: var(--yellow); }
+.tok-placeholder { color: var(--purple); font-weight: 700; }
+.tok-op { color: var(--red); }
+.tok-comment { color: var(--muted); font-weight: 400; }
+.command-meta {
+  border-top: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 20px;
+  color: var(--muted-2);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.command-meta.ok { color: #9fbd8f; }
+.command-meta.warning { color: var(--red); }
+.command-meta .meta-text { word-break: break-word; }
+.empty-state {
+  padding: 45px 16px;
+  text-align: center;
+  border: 1px dashed var(--line);
+  border-radius: 18px;
+  color: var(--muted);
+  line-height: 1.8;
+  background: rgba(255,255,255,.025);
+}
+.empty-state h3 { font-size: 13px; color: var(--fg); margin: 0 0 6px; }
+.empty-state p { margin: 0; font-size: 11px; }
+
+.variables-header {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 22px;
+}
+.variables-header .small-comment {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+.variable-group { margin-bottom: 28px; }
+.variable-group[hidden], .variable-field[hidden] { display: none !important; }
+.variable-group-title {
+  color: var(--cyan-ui);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  font-weight: 700;
+  padding: 0 0 12px;
+  border-bottom: 1px dashed var(--line-soft);
+  margin: 0 0 14px;
+}
+.variable-group-title span { color: var(--muted); font-weight: 400; }
+.variables-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.variable-field {
+  padding: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.035);
+  border-radius: 18px;
+  min-width: 0;
+}
+.variable-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.variable-name { font-size: 11px; font-weight: 700; color: var(--fg); }
+.variable-key { font-size: 10px; color: var(--blue); }
+.variable-input-wrap { position: relative; }
+.variable-input {
+  width: 100%;
+  min-width: 0;
+  min-height: 41px;
+  background: rgba(0,0,0,.18);
+  color: var(--yellow);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 12px;
+  outline: none;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.variable-input:focus { border-color: var(--cyan-ui); box-shadow: 0 0 0 2px rgba(132,178,195,.14); }
+.variable-input[type=password] { padding-right: 75px; }
+.variable-input::placeholder { color: #7d848c; }
+.variable-textarea { resize: vertical; min-height: 82px; }
+.variable-hint {
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--muted-2);
+  line-height: 1.65;
+}
+.variable-remove {
+  background: transparent;
+  color: var(--red);
+  border: 0;
+  font-size: 10px;
+  padding: 4px 0 4px 6px;
+}
+.variable-remove:hover { text-decoration: underline; }
+.variable-secret-btn {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  border: 0;
+  background: rgba(255,255,255,.08);
+  color: var(--muted);
+  border-radius: 9px;
+  padding: 7px 10px;
+  font-size: 10px;
+}
+.variable-secret-btn:hover { color: var(--white); }
+.variable-bottom {
+  margin-top: 20px;
+  padding: 18px;
+  background: rgba(132,178,195,.06);
+  border: 1px solid rgba(132,178,195,.2);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.85;
+  border-radius: 18px;
+}
+.variable-bottom strong { color: var(--cyan-ui); }
+.variable-bottom code {
+  color: var(--yellow);
+  background: rgba(0,0,0,.18);
+  padding: 2px 4px;
+  border-radius: 6px;
+}
+.derived-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 12px;
+}
+.derived-list > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: rgba(0,0,0,.14);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  min-width: 0;
+}
+.derived-list span {
+  font-size: 10px;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+.derived-note { margin-top: 17px; }
+.variable-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.editor-dialog {
+  border: 1px solid #565656;
+  background: #272727;
+  color: var(--fg);
+  width: min(640px, calc(100vw - 24px));
+  border-radius: 18px;
+  padding: 0;
+  max-height: calc(100dvh - 32px);
+  box-shadow: 0 30px 90px rgba(0,0,0,.7);
+}
+.editor-dialog::backdrop {
+  background: rgba(8,13,19,.82);
+  backdrop-filter: blur(3px);
+}
+.compact-dialog { width: min(500px, calc(100vw - 24px)); }
+.dialog-head {
+  padding: 23px 25px 17px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--line-soft);
+}
+.dialog-head h2 { margin: 10px 0 0; color: var(--white); font-size: 18px; }
+.dialog-body {
+  padding: 20px 25px 25px;
+  overflow-y: auto;
+  max-height: calc(100dvh - 210px);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.field-label {
+  display: block;
+  color: #d1d5da;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 9px;
+}
+.field-hint { color: var(--muted-2); font-weight: 400; }
+.field-input {
+  width: 100%;
+  background: rgba(0,0,0,.18);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px;
+  font-size: 12px;
+  outline: 0;
+}
+.field-input:focus { border-color: var(--cyan-ui); }
+.code-textarea { min-height: 128px; resize: vertical; color: var(--yellow); line-height: 1.8; }
+.dialog-help { font-size: 10px; line-height: 1.75; color: var(--muted); }
+.dialog-help code { color: var(--purple); }
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding: 14px 25px 20px;
+  border-top: 1px solid var(--line-soft);
+}
+#sectionSlug[readonly] { opacity: .72; cursor: not-allowed; }
+
+.toast {
+  position: fixed;
+  right: 23px;
+  bottom: 23px;
+  z-index: 40;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  padding: 13px 17px;
+  background: #33413f;
+  border: 1px solid #5d806e;
+  border-radius: 12px;
+  color: var(--white);
+  font-size: 11px;
+  max-width: calc(100vw - 48px);
+  transition: all .18s;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.error { background: #422f36; border-color: var(--red); }
+.drawer-backdrop { display: none; }
+
+@media (max-width: 1100px) {
+  .app-shell { grid-template-columns: 228px minmax(0, 1fr); }
+  .sidebar { padding-inline: 11px; }
+  .topbar { padding-inline: 24px; }
+  .main-content { padding-inline: 24px; }
+  .hide-small { display: none; }
+  .heading-row { align-items: flex-start; flex-direction: column; }
+  .heading-actions { justify-content: flex-start; }
+}
+@media (max-width: 740px) {
+  .app-shell { display: block; }
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 260px;
+    height: 100dvh;
+    min-height: 0;
+    transform: translateX(-110%);
+    transition: transform .22s ease;
+    box-shadow: 10px 0 40px rgba(0,0,0,.45);
+    z-index: 25;
+  }
+  .app-shell.drawer-open .sidebar { transform: translateX(0); }
+  .drawer-backdrop:not([hidden]) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 20;
+  }
+  .mobile-only { display: grid; }
+  .topbar {
+    min-height: 62px;
+    padding: 10px 16px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .header-right {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .main-content { padding: 28px 14px; }
+  .variables-grid, .derived-list { grid-template-columns: 1fr; }
+  .heading-actions { width: 100%; }
+  .heading-actions > .button { flex: 1; }
+  .command-card-top { flex-wrap: wrap; padding: 15px 12px 8px; gap: 10px; }
+  .command-buttons { width: 100%; justify-content: flex-end; }
+  .command-code, .command-meta { padding-inline: 12px; }
+  .variables-header { align-items: flex-start; flex-direction: column; }
+  .control-line { align-items: flex-start; flex-direction: column; }
+  .filter-field { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+</style>
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <aside class="sidebar" id="sidebar" aria-label="Menu principal">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">&gt;_</div>
+        <div>
+          <div class="brand-title">CTF<span class="accent">.</span>TERM</div>
+          <div class="brand-sub">pentest toolkit / v6.2</div>
+        </div>
+      </div>
+
+      <div class="sidebar-group-title">WORKSPACE <span>01</span></div>
+      <div class="sidebar-nav-scroll">
+        <nav id="mainNav" class="main-nav" aria-label="Seções do cheatsheet"></nav>
+        <button class="nav-create" id="addSection" type="button"><span aria-hidden="true">＋</span> Nova categoria</button>
+      </div>
+
+      <div class="sidebar-note">
+        <div class="side-note-label"><span class="pulse-dot"></span> MODO CHEATSHEET</div>
+        <p>Gera comandos para copiar e organizar por categoria. Não executa ações no alvo.</p>
+      </div>
+
+      <div class="sidebar-footer">CYBERSEC <span class="sep">/</span> PENTEST<br><span class="footer-muted">uso em ambientes autorizados</span></div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="header-left">
+          <button id="mobileMenu" class="icon-button mobile-only" aria-label="Abrir menu" title="Abrir menu">☰</button>
+          <div class="breadcrumb">workspace <span class="crumb-slash">/</span> <strong id="breadcrumb">nmap</strong></div>
+        </div>
+        <div class="header-right">
+          <div class="target-pill" title="IP atual"><span class="pulse-dot"></span><span id="targetBadge">IP não definido</span></div>
+          <div class="status-pill" id="statusRight">PRONTO</div>
+          <button class="button subtle hide-small" id="exportConfig" title="Baixar configurações e comandos (sem segredos)">↓ Exportar JSON</button>
+          <button class="button subtle hide-small" id="importConfig" title="Importar configurações de um arquivo JSON">↑ Importar JSON</button>
+          <input type="file" id="importInput" accept="application/json,.json" hidden>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <section class="page-heading" aria-label="Cabeçalho da seção">
+          <div class="eyebrow"><span class="eyebrow-square"></span> PENTEST CHEATSHEET</div>
+          <div class="heading-row">
+            <div>
+              <h1 id="pageTitle">Nmap <span class="heading-cursor">_</span></h1>
+              <p id="pageDescription">Comandos de reconhecimento organizados para o seu laboratório.</p>
+            </div>
+            <div class="heading-actions" id="headingActions"></div>
+          </div>
+        </section>
+
+        <section class="content-panel" aria-label="Conteúdo da seção selecionada">
+          <div id="sectionContent" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="commandDialog" class="editor-dialog" aria-labelledby="commandDialogTitle">
+    <form id="commandForm">
+      <div class="dialog-head"><div><div class="eyebrow">EDITOR / CHEATSHEET</div><h2 id="commandDialogTitle">Novo comando</h2></div><button type="button" class="icon-button" data-close-dialog="commandDialog" aria-label="Fechar">✕</button></div>
+      <div class="dialog-body">
+        <label class="field-label" for="commandSection">Seção</label>
+        <select class="field-input" id="commandSection" required></select>
+        <label class="field-label" for="commandTitle">Resumo <span class="field-hint">(aparece como # título)</span></label>
+        <input class="field-input" id="commandTitle" maxlength="140" required placeholder="Ex.: Identificar serviços e versões">
+        <label class="field-label" for="commandDescription">Descrição <span class="field-hint">(opcional)</span></label>
+        <input class="field-input" id="commandDescription" maxlength="240" placeholder="Ex.: Usa scripts padrão do Nmap">
+        <label class="field-label" for="commandTemplate">Comando <span class="field-hint">(suporta {{variavel}})</span></label>
+        <textarea class="field-input code-textarea" id="commandTemplate" rows="5" spellcheck="false" required placeholder="ffuf -u 'http://{{domain}}{{http_port}}/FUZZ' -w '{{dir_wordlist}}' -fs 0"></textarea>
+        <div class="dialog-help">As variáveis são inseridas literalmente, sem aspas automáticas. Você define as aspas no próprio comando, por exemplo: <code>ffuf -u 'http://{{domain}}{{http_port}}/FUZZ' -w '{{dir_wordlist}}' -fs 0</code>. A porta HTTP é opcional: digitar 8080 produz :8080; deixá-la vazia não adiciona nada. Você escolhe http:// ou https:// no template. Variáveis ausentes aparecem como pendentes. Revise valores especiais antes de executar.</div>
+      </div>
+      <div class="dialog-actions"><button type="button" class="button subtle" data-close-dialog="commandDialog">Cancelar</button><button type="submit" class="button primary">Salvar comando ↵</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="sectionDialog" class="editor-dialog compact-dialog" aria-labelledby="sectionDialogTitle">
+    <form id="sectionForm">
+      <div class="dialog-head"><div><div class="eyebrow">EDITOR / CATEGORIAS</div><h2 id="sectionDialogTitle">Nova categoria</h2></div><button type="button" class="icon-button" data-close-dialog="sectionDialog" aria-label="Fechar">✕</button></div>
+      <div class="dialog-body">
+        <label class="field-label" for="sectionLabel">Nome no menu</label>
+        <input class="field-input" id="sectionLabel" maxlength="42" required placeholder="Ex.: SMB, Linux PrivEsc, Kerberos">
+        <label class="field-label" for="sectionSlug">Identificador <span class="field-hint">(gerado automaticamente)</span></label>
+        <input class="field-input" id="sectionSlug" maxlength="40" required pattern="[a-z][a-z0-9_-]*" placeholder="smb">
+        <div class="dialog-help">Identificador único usado na navegação e nos backups. Não pode ser alterado após a criação.</div>
+        <label class="field-label" for="sectionSymbol">Símbolo no menu</label>
+        <input class="field-input" id="sectionSymbol" maxlength="6" placeholder="◇" value="◇">
+        <label class="field-label" for="sectionTitle">Título da página <span class="field-hint">(opcional)</span></label>
+        <input class="field-input" id="sectionTitle" maxlength="80" placeholder="Ex.: Enumeração SMB">
+        <label class="field-label" for="sectionDescription">Descrição <span class="field-hint">(opcional)</span></label>
+        <textarea class="field-input" id="sectionDescription" rows="3" maxlength="240" placeholder="Comandos para descoberta e enumeração do serviço."></textarea>
+      </div>
+      <div class="dialog-actions"><button type="button" class="button subtle" data-close-dialog="sectionDialog">Cancelar</button><button type="submit" class="button primary">Salvar categoria ↵</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="variableDialog" class="editor-dialog compact-dialog" aria-labelledby="variableDialogTitle">
+    <form id="variableForm">
+      <div class="dialog-head"><div><div class="eyebrow">EDITOR / VARIÁVEIS</div><h2 id="variableDialogTitle">Nova variável</h2></div><button type="button" class="icon-button" data-close-dialog="variableDialog" aria-label="Fechar">✕</button></div>
+      <div class="dialog-body">
+        <label class="field-label" for="variableLabel">Nome de exibição</label>
+        <input class="field-input" id="variableLabel" maxlength="60" required placeholder="Ex.: Domínio alternativo">
+        <label class="field-label" for="variableKey">Identificador</label>
+        <input class="field-input" id="variableKey" maxlength="40" required pattern="[a-z][a-z0-9_]*" placeholder="dominio_alt">
+        <label class="field-label" for="variableValue">Valor</label>
+        <textarea class="field-input" id="variableValue" rows="2" placeholder="valor usado no comando"></textarea>
+        <div class="dialog-help">Use o identificador nos comandos: <code>{{dominio_alt}}</code>. Não insira senhas em variáveis personalizadas; somente o campo Senha tem proteção especial.</div>
+      </div>
+      <div class="dialog-actions"><button type="button" class="button subtle" data-close-dialog="variableDialog">Cancelar</button><button type="submit" class="button primary">Criar variável ↵</button></div>
+    </form>
+  </dialog>
+  <script>
+/**
+ * CTF.Term — dados padrão editáveis.
+ *
+ * Para mudar o menu inicial, edite SECTIONS.
+ * Para adicionar campos, edite BUILTIN_FIELDS.
+ * Para alterar os exemplos do Nmap, edite DEFAULT_COMMANDS.
+ * Comandos cadastrados pela interface ficam no localStorage.
+ */
+(() => {
+  'use strict';
+  const SECTIONS = [
+    { id: 'variables', label: 'variáveis', symbol: '⌘', title: 'Variáveis do laboratório', description: 'Configure uma vez os valores para preencher seus comandos automaticamente.' },
+    { id: 'nmap', label: 'nmap', symbol: '⇶', title: 'Nmap — Reconhecimento inicial', description: 'Sua única categoria padrão de comandos. Adicione as demais categorias quando desejar ou importe um arquivo JSON compatível.' }
+  ];
+  const BUILTIN_FIELDS = [
+    { key: "ip", label: "IP do alvo", group: "Alvo e rede", hint: "Endereço IPv4/IPv6 do host alvo.", placeholder: "10.10.10.10" },
+    { key: "domain", label: "Domínio", group: "Alvo e rede", hint: "Usado para DNS, LDAP e derivação automática do Base DN.", placeholder: "domain.htb" },
+    { key: "target_host", label: "Hostname do alvo", group: "Alvo e rede", hint: "Nome completo de um host específico (FQDN).", placeholder: "dc01.domain.htb" },
+
+    { key: "ports_tcp", label: "Portas TCP", group: "Alvo e rede", hint: "Portas separadas por vírgula (sem os dois pontos).", placeholder: "22,80,443,445" },
+    { key: "dc_ip", label: "IP do Domain Controller", group: "Alvo e rede", hint: "Caso vazio, {{dc_ip}} assume automaticamente {{ip}}.", placeholder: "10.10.10.20" },
+    { key: "internal_ip", label: "IP da rede interna", group: "Alvo e rede", hint: "IP de um host interno no laboratório.", placeholder: "172.16.0.10" },
+    { key: "internal_net", label: "Rede interna (CIDR)", group: "Alvo e rede", hint: "Segmento da rede interna, ex.: 172.16.0.0/24.", placeholder: "172.16.0.0/24" },
+    { key: "attacker_ip", label: "IP do atacante", group: "Alvo e rede", hint: "IP de sua máquina no ambiente controlado.", placeholder: "10.10.14.5" },
+    { key: "http_port", label: "Porta HTTP opcional", group: "Web e requisições", hint: "8080 vira :8080; vazio não adiciona nada. Não insere o protocolo.", placeholder: "8080" },
+    { key: "base_url", label: "Endereço base / target_url", group: "Web e requisições", hint: "Usado em {{target_url}}; define o protocolo no próprio comando.", placeholder: "http://site.htb" },
+    { key: "http_path", label: "Caminho HTTP", group: "Web e requisições", hint: "Endpoint da aplicação (inclua a / se necessário).", placeholder: "/api/users" },
+    { key: "http_param", label: "Parâmetro HTTP", group: "Web e requisições", hint: "Nome do parâmetro GET ou POST a testar.", placeholder: "id" },
+    { key: "request_file", label: "Requisição bruta HTTP", group: "Web e requisições", hint: "Arquivo de requisição copiada do proxy Burp.", placeholder: "req.txt" },
+    { key: "proxy_port", label: "Porta do proxy", group: "Web e requisições", hint: "Porta sem dois pontos, usada no proxy HTTP.", placeholder: "8080" },
+    { key: "username", label: "Usuário", group: "Usuários e autenticação", hint: "Usuário para operações autenticadas.", placeholder: "john" },
+    { key: "password", label: "Senha", group: "Usuários e autenticação", hint: "Sensível: não é salva nem exportada. Evite expô-la na linha de comando.", placeholder: "••••••••", secret: true },
+    { key: "target_user", label: "Usuário de destino", group: "Usuários e autenticação", hint: "Conta cuja permissão ou acesso será verificado.", placeholder: "administrator" },
+    { key: "users_file", label: "Arquivo de usuários", group: "Usuários e autenticação", hint: "Lista de usuários.", placeholder: "./users.txt" },
+    { key: "pass_wordlist", label: "Wordlist de senhas", group: "Usuários e autenticação", hint: "Caminho definido por você; começa vazio.", placeholder: "/caminho/senhas.txt" },
+    { key: "hash_file", label: "Arquivo de hashes", group: "Usuários e autenticação", hint: "Arquivo local com hashes do laboratório.", placeholder: "./hashes.txt" },
+
+    { key: "ntlm_hash", label: "Hash NTLM", group: "Usuários e autenticação", hint: "Sensível: não é salvo nem exportado.", placeholder: "HASH_NTLM_AQUI", secret: true },
+    { key: "file_wordlist", label: "Wordlist de arquivos", group: "Arquivos e wordlists", hint: "Caminho para enumeração de arquivos.", placeholder: "/caminho/arquivos.txt" },
+    { key: "dir_wordlist", label: "Wordlist de diretórios", group: "Arquivos e wordlists", hint: "Caminho para fuzzing de diretórios.", placeholder: "/caminho/diretorios.txt" },
+    { key: "dns_wordlist", label: "Wordlist DNS", group: "Arquivos e wordlists", hint: "Lista para descoberta DNS/vhosts.", placeholder: "/caminho/subdominios.txt" },
+
+
+    { key: "share_name", label: "Compartilhamento SMB", group: "Active Directory e Windows", hint: "Nome do share SMB, sem barras no começo.", placeholder: "Shared" },
+
+    { key: "spn", label: "Service Principal Name", group: "Active Directory e Windows", hint: "Identificador de serviço Kerberos.", placeholder: "cifs/dc01.domain.htb" },
+    { key: "ca_name", label: "Autoridade certificadora", group: "Active Directory e Windows", hint: "Nome da CA usada pelo laboratório AD CS.", placeholder: "domain-CA" },
+    { key: "cert_template", label: "Template AD CS", group: "Active Directory e Windows", hint: "Nome do modelo de certificado.", placeholder: "User" },
+    { key: "pfx_file", label: "Certificado PKCS#12", group: "Active Directory e Windows", hint: "Caminho local para um arquivo .pfx.", placeholder: "./user.pfx" },
+    { key: "ccache_file", label: "Arquivo Kerberos CCACHE", group: "Active Directory e Windows", hint: "Caminho do cache Kerberos.", placeholder: "./user.ccache" },
+    { key: "domain_sid", label: "SID do domínio", group: "Active Directory e Windows", hint: "SID completo do domínio do laboratório.", placeholder: "S-1-5-21-..." },
+    { key: "lport", label: "Porta do listener", group: "Túneis e pivoting", hint: "Porta local para conexão reversa ou serviço.", placeholder: "4444" },
+    { key: "socks_port", label: "Porta SOCKS", group: "Túneis e pivoting", hint: "Porta de proxy SOCKS, sem dois pontos.", placeholder: "1080" },
+    { key: "pivot_ip", label: "IP do pivot", group: "Túneis e pivoting", hint: "IP do host intermediário usado em tunelamento.", placeholder: "10.10.10.20" },
+    { key: "pivot_user", label: "Usuário do pivot", group: "Túneis e pivoting", hint: "Usuário SSH para o host de pivot.", placeholder: "pivotuser" },
+    { key: "tunnel_port", label: "Porta do túnel", group: "Túneis e pivoting", hint: "Porta local/encaminhada do túnel.", placeholder: "11601" },
+    { key: "service_port", label: "Porta de serviço", group: "Túneis e pivoting", hint: "Porta do serviço que será encaminhado.", placeholder: "80" },
+    { key: "dns_server", label: "Servidor DNS", group: "Alvo e rede", hint: "Se vazio, usa automaticamente {{domain}}. Dig aceita IP ou hostname do DNS.", placeholder: "ns1.domain.htb" },
+    { key: "snmp_community", label: "Community SNMP", group: "Alvo e rede", hint: "Segredo temporário usado no SNMP v1/v2c; não é armazenado.", placeholder: "public", secret: true },
+    { key: "snmp_wordlist", label: "Wordlist de communities SNMP", group: "Arquivos e wordlists", hint: "Wordlist para o onesixtyone.", placeholder: "/caminho/communities.txt" },
+    { key: "file_extensions", label: "Extensões de arquivos", group: "Web e requisições", hint: "Extensões para Gobuster/FFUF; em FFUF use pontos (.php,.txt).", placeholder: ".php,.txt,.html,.bak" },
+    { key: "db_name", label: "Banco de dados", group: "Web e requisições", hint: "Banco de dados selecionado no SQLMap.", placeholder: "appdb" },
+    { key: "table_name", label: "Tabela SQL", group: "Web e requisições", hint: "Tabela que será inspecionada.", placeholder: "users" },
+    { key: "jwt_token", label: "JWT", group: "Web e requisições", hint: "Segredo temporário; não será salvo ou exportado.", placeholder: "eyJhbGciOi...", secret: true },
+    { key: "jwt_file", label: "Arquivo com JWT", group: "Web e requisições", hint: "Caminho de arquivo para análise de JWT.", placeholder: "./jwt.txt" },
+    { key: "jwt_public_key", label: "Chave pública JWT", group: "Web e requisições", hint: "Arquivo PEM com a chave pública.", placeholder: "./public.pem" },
+    { key: "ca_host", label: "Host da CA", group: "Active Directory e Windows", hint: "FQDN/IP do serviço da autoridade certificadora.", placeholder: "ca.domain.htb" },
+    { key: "gpo_name", label: "Nome da GPO", group: "Active Directory e Windows", hint: "Nome da política de grupo.", placeholder: "Default Domain Policy" },
+    { key: "gpo_guid", label: "GUID da GPO", group: "Active Directory e Windows", hint: "GUID com chaves, conforme a ferramenta.", placeholder: "{11111111-2222-3333-4444-555555555555}" },
+    { key: "fake_computer", label: "Conta de computador criada", group: "Active Directory e Windows", hint: "Nome de computador de teste, incluindo o $.", placeholder: "FAKE01$" },
+    { key: "fake_password", label: "Senha do computador de teste", group: "Active Directory e Windows", hint: "Segredo temporário; não será salvo nem exportado.", placeholder: "••••••••", secret: true },
+    { key: "delegated_computer", label: "Computador de destino RBCD", group: "Active Directory e Windows", hint: "Nome de conta de computador de destino, incluindo $.", placeholder: "TARGET$" },
+    { key: "krbtgt_hash", label: "Hash KRBTGT", group: "Active Directory e Windows", hint: "Segredo temporário; não será salvo nem exportado.", placeholder: "HASH_KRBTGT_AQUI", secret: true },
+    { key: "service_hash", label: "Hash da conta de serviço", group: "Active Directory e Windows", hint: "Segredo temporário; não será salvo nem exportado.", placeholder: "HASH_SERVICO_AQUI", secret: true },
+    { key: "child_domain", label: "Domínio filho", group: "Active Directory e Windows", hint: "FQDN de domínio filho para cenários de trust.", placeholder: "child.domain.htb" },
+    { key: "child_sid", label: "SID do domínio filho", group: "Active Directory e Windows", hint: "SID do domínio filho (sem RID).", placeholder: "S-1-5-21-111-222-333" },
+    { key: "parent_sid", label: "SID do domínio pai", group: "Active Directory e Windows", hint: "SID do domínio pai (sem RID).", placeholder: "S-1-5-21-444-555-666" },
+    { key: "internal_ip_2", label: "Segundo host interno", group: "Túneis e pivoting", hint: "Host do segundo salto de pivoting.", placeholder: "172.16.0.11" },
+    { key: "pivot_user_2", label: "Usuário do segundo pivot", group: "Túneis e pivoting", hint: "Usuário SSH do segundo salto.", placeholder: "user2" },
+    { key: "tunnel_domain", label: "Domínio de túnel DNS", group: "Túneis e pivoting", hint: "Domínio de teste delegado para túnel DNS.", placeholder: "tunnel.domain.htb" },
+    { key: "tunnel_ip", label: "IP de túnel DNS", group: "Túneis e pivoting", hint: "IP de interface virtual do túnel DNS.", placeholder: "10.0.0.1" },
+    { key: "tunnel_port_2", label: "Segunda porta de túnel", group: "Túneis e pivoting", hint: "Porta adicional usada em encaminhamento.", placeholder: "9999" }
+  ];
+  const DEFAULT_COMMANDS = [
+    { id: 'nmap-1', section: 'nmap', title: 'Escanear todas as portas TCP rapidamente', description: 'Varredura inicial das 65.535 portas TCP.', command: 'nmap -p- --open --min-rate 5000 {{ip}}' },
+    { id: 'nmap-2', section: 'nmap', title: 'Identificar serviços, versões e scripts padrão', description: 'Use as portas encontradas na primeira etapa.', command: 'nmap -sC -sV -p {{ports_tcp}} {{ip}}' },
+    { id: 'nmap-3', section: 'nmap', title: 'Verificar portas UDP', description: 'Quando a superfície TCP não mostrar nada óbvio.', command: 'nmap -Pn -sU -p- {{ip}}' },
+  ];
+
+  window.CTFTermDefaults = { SECTIONS, BUILTIN_FIELDS, DEFAULT_COMMANDS };
+})();
+
+  </script>
+  <script>
+/**
+ * CTF.Term v6 — armazenamento e validação de dados.
+ *
+ * Um único formato oficial. Não existe importador de formatos históricos.
+ * Todos os campos com secret: true ficam apenas na memória desta aba.
+ */
+(() => {
+  'use strict';
+
+  const { SECTIONS, BUILTIN_FIELDS, DEFAULT_COMMANDS } = window.CTFTermDefaults;
+  const FORMAT = 'ctf-term.workspace';
+  const SCHEMA = 6;
+  const STORAGE_KEY = 'ctf-term:workspace:v6';
+  const MAX_CATEGORIES = 60;
+  const MAX_VARIABLES = 80;
+  const MAX_COMMANDS = 300;
+  const BUILTIN_KEYS = new Set(BUILTIN_FIELDS.map(field => field.key));
+  const SECRET_KEYS = new Set(BUILTIN_FIELDS.filter(field => field.secret).map(field => field.key));
+  const BUILTIN_SECTIONS = new Set(SECTIONS.map(section => section.id));
+  const RESERVED_KEYS = new Set([
+    '__proto__', 'prototype', 'constructor',
+    'base_dn', 'ldap_bind'
+  ]);
+
+  const clone = value => JSON.parse(JSON.stringify(value));
+  const limited = (value, max) => typeof value === 'string' ? value.slice(0, max) : '';
+  const validKey = value => typeof value === 'string' && /^[a-z][a-z0-9_]{0,39}$/.test(value) && !RESERVED_KEYS.has(value);
+  const validCategoryId = value => typeof value === 'string' && /^[a-z][a-z0-9_-]{0,39}$/.test(value) && !RESERVED_KEYS.has(value);
+
+  function fresh() {
+    return {
+      variables: Object.fromEntries(BUILTIN_FIELDS.map(field => [field.key, ''])),
+      customVariables: [],
+      categories: [],
+      commands: clone(DEFAULT_COMMANDS)
+    };
+  }
+
+  function sanitize(workspace) {
+    const clean = fresh();
+    const categories = Array.isArray(workspace.categories) ? workspace.categories : [];
+    for (const category of categories.slice(0, MAX_CATEGORIES)) {
+      if (!category || !validCategoryId(category.id) || BUILTIN_SECTIONS.has(category.id) || clean.categories.some(item => item.id === category.id)) continue;
+      const label = limited(category.label, 42).trim();
+      if (!label) continue;
+      clean.categories.push({
+        id: category.id,
+        label,
+        title: limited(category.title, 80).trim() || label,
+        description: limited(category.description, 240).trim() || 'Comandos personalizados para o laboratório.',
+        symbol: limited(category.symbol, 6).trim() || '◇'
+      });
+    }
+
+    const values = workspace.variables && typeof workspace.variables === 'object' && !Array.isArray(workspace.variables)
+      ? workspace.variables : {};
+    for (const key of BUILTIN_KEYS) {
+      if (!SECRET_KEYS.has(key)) clean.variables[key] = limited(values[key], 10000);
+    }
+    const custom = Array.isArray(workspace.customVariables) ? workspace.customVariables : [];
+    for (const variable of custom.slice(0, MAX_VARIABLES)) {
+      if (!variable || !validKey(variable.key) || BUILTIN_KEYS.has(variable.key) || clean.customVariables.some(item => item.key === variable.key)) continue;
+      clean.customVariables.push({ key: variable.key, label: limited(variable.label, 60) || variable.key });
+      clean.variables[variable.key] = limited(values[variable.key], 10000);
+    }
+
+    const allowed = new Set([...BUILTIN_SECTIONS, ...clean.categories.map(category => category.id)]);
+    if (Array.isArray(workspace.commands)) {
+      const seen = new Set();
+      clean.commands = workspace.commands.slice(0, MAX_COMMANDS).filter(command => {
+        if (!command || typeof command.id !== 'string' || !command.id || command.id.length > 90 || seen.has(command.id)) return false;
+        if (!allowed.has(command.section) || command.section === 'variables') return false;
+        if (typeof command.title !== 'string' || typeof command.command !== 'string' || !command.title.trim() || !command.command.trim()) return false;
+        seen.add(command.id);
+        return true;
+      }).map(command => ({
+        id: command.id,
+        section: command.section,
+        title: limited(command.title, 140),
+        description: limited(command.description, 240),
+        command: limited(command.command, 8000)
+      }));
+    }
+    return clean;
+  }
+
+  function parse(document) {
+    if (!document || document.format !== FORMAT || document.schema !== SCHEMA || !document.workspace || typeof document.workspace !== 'object' || Array.isArray(document.workspace)) {
+      throw new Error('Formato não suportado. Importe um arquivo JSON gerado pelo CTF.Term v6.');
+    }
+    const { workspace } = document;
+    if (!Array.isArray(workspace.categories) || !Array.isArray(workspace.customVariables) || !Array.isArray(workspace.commands) || !workspace.variables || typeof workspace.variables !== 'object' || Array.isArray(workspace.variables)) {
+      throw new Error('Estrutura de workspace inválida.');
+    }
+    return sanitize(workspace);
+  }
+
+  function serialize(state, exported = false) {
+    const variables = Object.fromEntries(
+      Object.entries(state.variables).filter(([key]) => !SECRET_KEYS.has(key))
+    );
+    const document = {
+      format: FORMAT,
+      schema: SCHEMA,
+      workspace: {
+        variables,
+        customVariables: clone(state.customVariables),
+        categories: clone(state.categories),
+        commands: clone(state.commands)
+      }
+    };
+    if (exported) document.exportedAt = new Date().toISOString();
+    return document;
+  }
+
+  function load() {
+    try {
+      const source = localStorage.getItem(STORAGE_KEY);
+      return source ? parse(JSON.parse(source)) : fresh();
+    } catch {
+      return fresh();
+    }
+  }
+
+  function save(state) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(serialize(state)));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  window.CTFTermStore = Object.freeze({
+    STORAGE_KEY, FORMAT, SCHEMA, MAX_CATEGORIES, MAX_VARIABLES, MAX_COMMANDS,
+    validKey, validCategoryId, fresh, parse, serialize, load, save
+  });
+})();
+
+  </script>
+  <script>
+/**
+ * CTF.Term — controlador da interface.
+ *
+ * Usa os dados de defaults.js e o armazenamento nativo de storage.js.
+ * Não lê nem converte dados de outras versões.
+ * Não executa comandos nem faz requisições à máquina alvo.
+ */
+(() => {
+  'use strict';
+  const { SECTIONS, BUILTIN_FIELDS } = window.CTFTermDefaults;
+  const Store = window.CTFTermStore;
+  const { validKey, validCategoryId, MAX_CATEGORIES, MAX_VARIABLES, MAX_COMMANDS } = Store;
+  const SECRET_KEYS = new Set(BUILTIN_FIELDS.filter(field => field.secret).map(field => field.key));
+  const BUILTIN_KEYS = new Set(BUILTIN_FIELDS.map(field => field.key));
+  const $ = id => document.getElementById(id);
+  const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+  const slugify = text => String(text).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
+
+  const state = {
+    ...Store.load(),
+    section: 'nmap',
+    search: '',
+    showPasswordInput: false,
+    showPasswordCommands: false,
+    editingCommandId: null,
+    editingSectionId: null
+  };
+  const sectionList = () => [...SECTIONS, ...state.categories];
+  const sectionById = id => sectionList().find(section => section.id === id);
+
+  // ─── Persistência e mensagens ───
+  function persist() { Store.save(state); }
+  function toast(message, error = false) {
+    const el = $('toast');
+    el.textContent = message;
+    el.classList.toggle('error', error);
+    el.classList.add('show');
+    window.clearTimeout(toast.timer);
+    toast.timer = window.setTimeout(() => el.classList.remove('show'), 2500);
+  }
+  // ─── Variáveis derivadas e interpolação literal ───
+  function derivedVariables() {
+    const v = state.variables;
+    const ip = (v.ip || '').trim();
+    const domain = (v.domain || '').trim();
+    const domainParts = domain.split('.').filter(Boolean);
+    return {
+      ...v,
+      dc_ip: (v.dc_ip || '').trim() || ip,
+      dns_server: (v.dns_server || '').trim() || domain,
+      http_port: (() => {
+        const raw = (v.http_port || '').trim().replace(/^:/, '');
+        if (!raw) return '';
+        return /^\d{1,5}$/.test(raw) && Number(raw) >= 1 && Number(raw) <= 65535 ? ':' + raw : null;
+      })(),
+      base_dn: domainParts.length > 1 ? domainParts.map(part => 'DC=' + part).join(',') : '',
+      ldap_bind: v.username && domain ? String(v.username).includes('@') ? v.username : v.username + '@' + domain : ''
+    };
+  }
+  function fillTemplate(template, revealSecret = state.showPasswordCommands) {
+    const values = derivedVariables();
+    const missing = new Set();
+    const rendered = String(template).replace(/\{\{([a-z][a-z0-9_]*)\}\}/g, (whole, key) => {
+      // Porta vazia é opcional: não deixa placeholder pendente na URL.
+      if (key === 'http_port' && !String(state.variables.http_port || '').trim()) return '';
+      if (SECRET_KEYS.has(key) && !revealSecret && state.variables[key]) {
+        missing.add(key + ' oculto');
+        return whole;
+      }
+      if (!Object.prototype.hasOwnProperty.call(values, key) || values[key] === undefined || values[key] === null || values[key] === '') {
+        missing.add(key);
+        return whole;
+      }
+      // Interpolação literal: aspas e escapes pertencem exclusivamente ao template.
+      return String(values[key]);
+    });
+    return { rendered, missing: [...missing] };
+  }
+  // ─── Destaque de sintaxe / comentários Bash ───
+  const SYNTAX_REGEX = /(\{\{[a-z][a-z0-9_]*\}\}|'(?:[^']*)'|"(?:\\.|[^"\\])*"|(?<![\w-])--?[a-zA-Z][\w-]*|\b(?:nmap|ffuf|nxc|uname|arch|id|w|who|last|route|iptables|ps|chmod|chroot|sh|cp|showmount|su|mysql|tmux|screen|env|systemctl|service|pstree|ls|crontab|find|getcap|mount|df|grep|hostname|docker|hostnamectl|whoami|groups|ip|ifconfig|ss|netstat|arp|socat|proxychains|echo|nc|cat|wget|scp|ssh|base64|john|whatweb|wappalyzer|gobuster|feroxbuster|sqlmap|sudo|git|python3|export|impacket-raiseChild|impacket-ticketer|impacket-smbserver|impacket-smbexec|impacket-dcomexec|impacket-atexec|impacket-addcomputer|impacket-rbcd|certipy-ad|impacket-getST|impacket-findDelegation|rpcclient|impacket-GetNPUsers|impacket-GetUserSPNs|impacket-psexec|impacket-wmiexec|impacket-secretsdump|hashcat|kerbrute|onesixtyone|snmpwalk|evil-winrm|curl|dig|dnsrecon|ldapsearch|netexec|bloodhound-python|enum4linux-ng|xfreerdp3|smbclient|for|do|done)\b|[|;&])/g;
+
+  function highlight(text) {
+    // Colore trechos de comandos sem alterar o texto copiado ou executado.
+    // O comentário Bash começa em # fora de aspas e no início de um token.
+    function highlightCode(code) {
+      const regex = SYNTAX_REGEX;
+      regex.lastIndex = 0;
+      let result = '', last = 0, match;
+      while ((match = regex.exec(code)) !== null) {
+        result += escapeHtml(code.slice(last, match.index));
+        const token = match[0];
+        let className = 'tok-op';
+        if (token.startsWith('{{')) className = 'tok-placeholder';
+        else if (token.startsWith("'") || token.startsWith('"')) className = 'tok-string';
+        else if (token.startsWith('-')) className = 'tok-flag';
+        else if (/^[a-z]/.test(token)) className = 'tok-command';
+        result += '<span class="' + className + '">' + escapeHtml(token) + '</span>';
+        last = regex.lastIndex;
+      }
+      return result + escapeHtml(code.slice(last));
+    }
+
+    function commentStart(line) {
+      let quote = null;
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '\\' && quote !== "'") { i++; continue; }
+        if (quote) {
+          if (char === quote) quote = null;
+          continue;
+        }
+        if (char === "'" || char === '"') { quote = char; continue; }
+        if (char === '#' && (i === 0 || /\s/.test(line[i - 1]))) return i;
+      }
+      return -1;
+    }
+
+    return String(text).split('\n').map(line => {
+      const index = commentStart(line);
+      if (index === -1) return highlightCode(line);
+      return highlightCode(line.slice(0, index))
+        + '<span class="tok-comment">' + escapeHtml(line.slice(index)) + '</span>';
+    }).join('\n');
+  }
+  // ─── Navegação e renderização ───
+  function countCommands(section) { return state.commands.filter(command => command.section === section).length; }
+  function renderNav() {
+    $('mainNav').innerHTML = sectionList().map(s => `
+      <button type="button" class="nav-item ${state.section === s.id ? 'active' : ''}" data-nav="${s.id}" ${state.section === s.id ? 'aria-current="page"' : ''}>
+        <span class="nav-symbol" aria-hidden="true">${escapeHtml(s.symbol)}</span><span class="nav-label">${escapeHtml(s.label)}</span>
+        <span class="nav-count">${s.id === 'variables' ? BUILTIN_FIELDS.length + state.customVariables.length : String(countCommands(s.id)).padStart(2, '0')}</span>
+      </button>`).join('');
+  }
+  function updateBadge() {
+    const targetBadge = $('targetBadge');
+    const statusRight = $('statusRight');
+    if (targetBadge) targetBadge.textContent = state.variables.ip.trim() || 'IP não definido';
+    if (statusRight) statusRight.textContent = state.commands.length + ' comandos';
+  }
+  function setSection(id) {
+    if (!sectionById(id)) return;
+    state.section = id;
+    state.search = '';
+    $('appShell').classList.remove('drawer-open');
+    $('drawerBackdrop').hidden = true;
+    render();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+  function render() {
+    const section = sectionById(state.section) || SECTIONS[0];
+    renderNav();
+    $('breadcrumb').textContent = section.label;
+    $('pageTitle').innerHTML = escapeHtml(section.title) + ' <span class="heading-cursor">_</span>';
+    $('pageDescription').textContent = section.description;
+        const actions = $('headingActions');
+    if (section.id === 'variables') {
+      actions.innerHTML = '<button class="button primary" type="button" id="addVariable">+ Nova variável</button>';
+      renderVariables();
+    } else {
+      const categoryActions = state.categories.some(c => c.id === section.id)
+        ? '<button class="button subtle" type="button" id="editSection">✎ Editar categoria</button><button class="button danger" type="button" id="deleteSection">× Excluir categoria</button>' : '';
+      actions.innerHTML = categoryActions + '<button class="button subtle" type="button" id="exportMarkdown">↓ Cheatsheet .md</button><button class="button subtle" type="button" id="toggleSecrets" title="Alternar visualização de senha e hash nos comandos">' + (state.showPasswordCommands ? '◉ Ocultar segredos' : '◉ Exibir segredos') + '</button><button class="button primary" type="button" id="addCommand">+ Novo comando</button>';
+      renderCommands();
+    }
+    updateBadge();
+  }
+  function renderVariables() {
+    const fields = [...BUILTIN_FIELDS, ...state.customVariables.map(item => ({ ...item, group: 'Minhas variáveis', hint: 'Variável personalizada.', custom: true }))];
+    const groupOrder = [...new Set(fields.map(f => f.group || 'Outras variáveis'))];
+    const sections = groupOrder.map(group => {
+      const cards = fields.filter(f => (f.group || 'Outras variáveis') === group).map(field => {
+        const value = state.variables[field.key] ?? '';
+        const isTextArea = field.multiline || (field.custom && value.includes('\n'));
+        const input = isTextArea
+          ? `<textarea class="variable-input variable-textarea" data-field="${escapeHtml(field.key)}" spellcheck="false" placeholder="${escapeHtml(field.placeholder || '')}">${escapeHtml(value)}</textarea>`
+          : `<input class="variable-input" type="${field.secret && !state.showPasswordInput ? 'password' : 'text'}" data-field="${escapeHtml(field.key)}" value="${escapeHtml(value)}" spellcheck="false" autocomplete="off" placeholder="${escapeHtml(field.placeholder || '')}">`;
+        return `<div class="variable-field" data-variable-card data-search="${escapeHtml((field.key + ' ' + field.label + ' ' + field.hint + ' ' + group).toLocaleLowerCase('pt-BR'))}">
+          <div class="variable-head"><div><div class="variable-name">${escapeHtml(field.label)}</div><div class="variable-key">{{${escapeHtml(field.key)}}}</div></div>
+          ${field.custom ? `<button class="variable-remove" data-remove-variable="${escapeHtml(field.key)}" title="Excluir variável">Excluir</button>` : ''}</div>
+          <div class="variable-input-wrap">${input}${field.secret ? `<button class="variable-secret-btn" type="button" data-toggle-secret-input>${state.showPasswordInput ? 'Ocultar' : 'Mostrar'}</button>` : ''}</div>
+          <div class="variable-hint">${escapeHtml(field.hint || '')}</div></div>`;
+      }).join('');
+      return `<section class="variable-group" data-variable-group><h2 class="variable-group-title">${escapeHtml(group)} <span>(${fields.filter(f => (f.group || 'Outras variáveis') === group).length})</span></h2><div class="variables-grid">${cards}</div></section>`;
+    }).join('');
+    $('sectionContent').innerHTML = `
+      <p class="terminal-comment"><span class="hash">#</span> Comece com as variáveis do alvo; as demais podem ficar vazias até serem necessárias. Os valores de demonstração aparecem só como placeholders.</p>
+      <div class="variables-header"><span class="small-comment">${fields.length} variáveis editáveis · campos sensíveis não são persistidos</span>
+        <input class="filter-field" type="search" id="variableSearch" spellcheck="false" placeholder="/ filtrar variáveis..." aria-label="Filtrar variáveis"></div>
+      <div id="variableGroups">${sections}</div>
+      <div class="variable-bottom"><strong>✧ VARIÁVEIS AUTOMÁTICAS</strong>
+        <div class="derived-list">
+          <div><code>{{base_dn}}</code><span data-derived="base_dn">—</span></div>
+          <div><code>{{ldap_bind}}</code><span data-derived="ldap_bind">—</span></div>
+          <div><code>{{dc_ip}}</code><span data-derived="dc_ip">—</span></div>
+          <div><code>{{dns_server}}</code><span data-derived="dns_server">—</span></div>
+          <div><code>{{http_port}}</code><span data-derived="http_port">—</span></div>
+        </div>
+        <div class="derived-note">A substituição é literal: você decide aspas, URLs com <code>http://</code> ou <code>https://</code> e portas no template. <code>{{http_port}}</code> vazio é opcional; <code>8080</code> gera <code>:8080</code>. <strong>Todos os campos sensíveis são temporários</strong>, nunca entram no backup JSON e só são mostrados nos comandos quando você permite. Não execute comandos que contenham valores não confiáveis sem revisar o shell.</div>
+      </div>
+      <div class="variable-tools"><button type="button" class="button subtle" data-config="export">↓ Exportar JSON</button><button type="button" class="button subtle" data-config="import">↑ Importar JSON</button><button type="button" class="button danger" id="resetConfig">↺ Restaurar tudo</button></div>`;
+    updateDerivedPreview();
+  }
+  function updateDerivedPreview() {
+    const values = derivedVariables();
+    document.querySelectorAll('[data-derived]').forEach(el => {
+      const key = el.dataset.derived;
+      el.textContent = values[key] == null || values[key] === '' ? '—' : String(values[key]);
+    });
+  }
+  function filterVariableCards(search) {
+    const query = search.trim().toLocaleLowerCase('pt-BR');
+    document.querySelectorAll('[data-variable-group]').forEach(group => {
+      let visible = 0;
+      group.querySelectorAll('[data-variable-card]').forEach(card => {
+        const matches = card.dataset.search.includes(query);
+        card.hidden = !matches;
+        if (matches) visible++;
+      });
+      group.hidden = visible === 0;
+    });
+  }
+  function commandCard(command) {
+    const rendered = fillTemplate(command.command);
+    const ready = rendered.missing.length === 0;
+    const textStatus = ready ? 'Variáveis resolvidas · pronto para copiar' : 'Pendente: ' + rendered.missing.join(', ');
+
+    // O prompt "$" é apenas visual e só aparece em comandos de uma linha.
+    // O conteúdo copiado continua sendo o comando original, sem o prompt.
+    const showPrompt = !/[\r\n]/.test(rendered.rendered);
+    const promptHtml = showPrompt ? '<span class="shell-dollar">$</span>' : '';
+
+    return `<article class="command-card" data-command-id="${escapeHtml(command.id)}">
+      <div class="command-card-top">
+        <div>
+          <h3 class="command-title"><span class="hash">#</span>${escapeHtml(command.title)}</h3>
+          ${command.description ? `<p class="command-desc">${escapeHtml(command.description)}</p>` : ''}
+        </div>
+        <div class="command-buttons">
+          <button class="card-small-button" type="button" data-action="edit" data-id="${escapeHtml(command.id)}" title="Editar comando">✎ Editar</button>
+          <button class="card-small-button" type="button" data-action="delete" data-id="${escapeHtml(command.id)}" title="Excluir comando">×</button>
+          <button class="card-small-button" type="button" data-action="copy" data-id="${escapeHtml(command.id)}" ${ready ? '' : 'disabled'} title="${ready ? 'Copiar comando preenchido' : escapeHtml(textStatus)}">⧉ Copiar</button>
+        </div>
+      </div>
+      <div class="command-code">
+        <pre>${promptHtml}<code>${highlight(rendered.rendered)}</code></pre>
+      </div>
+      <div class="command-meta ${ready ? 'ok' : 'warning'}">
+        <span>${ready ? '●' : '◇'}</span><span class="meta-text">${escapeHtml(textStatus)}</span>
+      </div>
+    </article>`;
+  }
+  function drawCards() {
+    const term = state.search.toLocaleLowerCase('pt-BR').trim();
+    const sectionCommands = state.commands.filter(c => c.section === state.section);
+    const commands = sectionCommands.filter(c => (c.title + ' ' + c.description + ' ' + c.command).toLocaleLowerCase('pt-BR').includes(term));
+    $('countLabel').innerHTML = `<span class="count-accent">${commands.length}</span> / ${sectionCommands.length} comandos`;
+    $('commandCards').innerHTML = commands.length ? commands.map(commandCard).join('') : '<div class="empty-state"><h3>Nenhum comando encontrado</h3><p>Tente outro termo ou adicione um comando personalizado.</p></div>';
+  }
+  function renderCommands() {
+    $('sectionContent').innerHTML = `<p class="terminal-comment"><span class="hash">#</span> Cheatsheet para ${escapeHtml(sectionById(state.section).label)}. Edite os exemplos, crie comandos próprios e copie o resultado com suas variáveis.</p>
+      <div class="control-line"><input type="search" id="commandSearch" class="filter-field" value="${escapeHtml(state.search)}" aria-label="Buscar comandos" placeholder="/ buscar comandos nesta seção..."><span class="counter" id="countLabel"></span></div>
+      <div class="commands-list" id="commandCards"></div>`;
+    drawCards();
+  }
+  // ─── Editor de comandos, categorias e variáveis ───
+  function openCommandDialog(id = null) {
+    const existing = id ? state.commands.find(c => c.id === id) : null;
+    state.editingCommandId = existing?.id || null;
+    $('commandDialogTitle').textContent = existing ? 'Editar comando' : 'Novo comando';
+    $('commandSection').innerHTML = sectionList().filter(s => s.id !== 'variables').map(s => `<option value="${s.id}">${escapeHtml(s.label)}</option>`).join('');
+    $('commandSection').value = existing?.section || state.section;
+    $('commandTitle').value = existing?.title || '';
+    $('commandDescription').value = existing?.description || '';
+    $('commandTemplate').value = existing?.command || '';
+    $('commandDialog').showModal();
+    $('commandTitle').focus();
+  }
+  function openSectionDialog(id = null) {
+    const existing = id ? state.categories.find(section => section.id === id) : null;
+    state.editingSectionId = existing?.id || null;
+    $('sectionDialogTitle').textContent = existing ? 'Editar categoria' : 'Nova categoria';
+    $('sectionForm').reset();
+    $('sectionLabel').value = existing?.label || '';
+    $('sectionSlug').value = existing?.id || '';
+    $('sectionSlug').readOnly = Boolean(existing);
+    $('sectionSymbol').value = existing?.symbol || '◇';
+    $('sectionTitle').value = existing?.title || '';
+    $('sectionDescription').value = existing?.description || '';
+    $('sectionDialog').showModal();
+    $('sectionLabel').focus();
+  }
+  function saveSection(event) {
+    event.preventDefault();
+    const label = $('sectionLabel').value.trim();
+    const id = $('sectionSlug').value.trim().toLowerCase();
+    const title = $('sectionTitle').value.trim() || label;
+    const description = $('sectionDescription').value.trim() || 'Comandos personalizados para o laboratório.';
+    const symbol = $('sectionSymbol').value.trim() || '◇';
+    if (!label || !validCategoryId(id)) return toast('Informe um nome e um identificador válido.', true);
+    if (state.editingSectionId) {
+      const existing = state.categories.find(section => section.id === state.editingSectionId);
+      if (!existing) return toast('Categoria não encontrada.', true);
+      Object.assign(existing, { label, title, description, symbol });
+    } else {
+      if (sectionById(id)) return toast('Esse identificador já pertence a outra categoria.', true);
+      if (state.categories.length >= MAX_CATEGORIES) return toast('Limite de categorias atingido.', true);
+      state.categories.push({ id, label, title, description, symbol });
+    }
+    persist(); closeDialogs(); setSection(id);
+    toast(state.editingSectionId ? 'Categoria atualizada.' : 'Categoria criada. Adicione seus comandos!');
+    state.editingSectionId = null;
+  }
+  function deleteSection() {
+    const id = state.section;
+    const section = state.categories.find(item => item.id === id);
+    if (!section) return;
+    const count = countCommands(id);
+    const message = count
+      ? `Excluir a categoria "${section.label}" e seus ${count} comando(s)? Essa ação é irreversível. Faça um backup JSON antes.`
+      : `Excluir a categoria "${section.label}"? Essa ação não pode ser desfeita.`;
+    if (!window.confirm(message)) return;
+    state.categories = state.categories.filter(item => item.id !== id);
+    state.commands = state.commands.filter(item => item.section !== id);
+    persist(); setSection('nmap'); toast('Categoria excluída.');
+  }
+  function openVariableDialog() { $('variableForm').reset(); $('variableDialog').showModal(); $('variableLabel').focus(); }
+  function closeDialogs() { for (const id of ['variableDialog', 'commandDialog', 'sectionDialog']) { if ($(id).open) $(id).close(); } }
+  function saveCommand(event) {
+    event.preventDefault();
+    const title = $('commandTitle').value.trim();
+    const command = $('commandTemplate').value.trim();
+    const description = $('commandDescription').value.trim();
+    const section = $('commandSection').value;
+    if (!title || !command || !sectionById(section) || section === 'variables') return toast('Preencha título, seção e comando.', true);
+    if (state.editingCommandId) {
+      const target = state.commands.find(c => c.id === state.editingCommandId);
+      if (target) Object.assign(target, { title, command, description, section });
+    } else {
+      if (state.commands.length >= MAX_COMMANDS) return toast('Limite de comandos atingido.', true);
+      state.commands.push({ id: 'custom-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8), title, description, section, command });
+    }
+    persist(); closeDialogs(); setSection(section); toast('Comando salvo.');
+  }
+  function saveVariable(event) {
+    event.preventDefault();
+    const key = $('variableKey').value.trim().toLowerCase();
+    const label = $('variableLabel').value.trim();
+    const value = $('variableValue').value;
+    if (!validKey(key) || BUILTIN_KEYS.has(key) || state.customVariables.some(v => v.key === key)) return toast('Identificador inválido ou já existente.', true);
+    if (!label) return toast('Informe o nome da variável.', true);
+    if (state.customVariables.length >= MAX_VARIABLES) return toast('Limite de variáveis atingido.', true);
+    state.customVariables.push({ key, label });
+    state.variables[key] = value;
+    persist(); closeDialogs(); render(); toast('Variável {{' + key + '}} criada.');
+  }
+  // ─── Cópia de comandos e exportação ───
+  async function copyText(text) {
+    try { if (!navigator.clipboard?.writeText) throw new Error('clipboard indisponível'); await navigator.clipboard.writeText(text); }
+    catch {
+      const el = document.createElement('textarea');
+      el.value = text; el.setAttribute('readonly', ''); el.style.cssText = 'position:fixed;left:-9999px;top:0';
+      document.body.appendChild(el); el.select();
+      const result = document.execCommand('copy'); el.remove();
+      if (!result) throw new Error('não foi possível acessar a área de transferência');
+    }
+  }
+  async function handleCardAction(button) {
+    const id = button.dataset.id, action = button.dataset.action;
+    const command = state.commands.find(c => c.id === id);
+    if (!command) return;
+    if (action === 'edit') return openCommandDialog(id);
+    if (action === 'delete') {
+      if (!window.confirm('Excluir este comando do seu cheatsheet?')) return;
+      state.commands = state.commands.filter(c => c.id !== id);
+      persist(); render(); toast('Comando excluído.'); return;
+    }
+    if (action === 'copy') {
+      const filled = fillTemplate(command.command);
+      if (filled.missing.length) return toast('Preencha as variáveis pendentes antes de copiar.', true);
+      try { await copyText(filled.rendered); button.textContent = '✓ Copiado'; button.classList.add('copied'); toast('Comando copiado para a área de transferência.'); }
+      catch { toast('Cópia bloqueada pelo navegador.', true); }
+    }
+  }
+  function downloadFile(filename, content, type) {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 500);
+  }
+
+  function exportMarkdown() {
+    const parts = [
+      '# CTF Cheatsheet',
+      '',
+      '> Gerado pelo CTF.Term para uso exclusivo em laboratórios autorizados.',
+      '> Variáveis inseridas literalmente; revise suas aspas e escapes antes de executar. Valores de campos sensíveis omitidos neste arquivo.',
+      '',
+      '**IP:** `' + (state.variables.ip || 'não definido').replace(/`/g, '') + '`  ',
+      '**Domínio:** `' + (state.variables.domain || 'não definido').replace(/`/g, '') + '`',
+      ''
+    ];
+    for (const section of sectionList().filter(s => s.id !== 'variables')) {
+      const commands = state.commands.filter(c => c.section === section.id);
+      if (!commands.length) continue;
+      parts.push('## ' + section.title, '');
+      for (const command of commands) {
+        const filled = fillTemplate(command.command, false);
+        parts.push('### ' + command.title.replace(/[\r\n]+/g, ' '), '');
+        if (command.description) parts.push(command.description.replace(/[\r\n]+/g, ' '), '');
+        parts.push('```bash', filled.rendered, '```', '');
+        if (filled.missing.length) parts.push('*Variáveis pendentes: ' + filled.missing.join(', ') + '*', '');
+      }
+    }
+    downloadFile('ctf-cheatsheet.md', parts.join('\n'), 'text/markdown;charset=utf-8');
+    toast('Cheatsheet Markdown exportado (sem segredos).');
+  }
+  function exportConfig() {
+    downloadFile(
+      'ctf-term-workspace-v6.json',
+      JSON.stringify(Store.serialize(state, true), null, 2),
+      'application/json;charset=utf-8'
+    );
+    toast('Workspace v6 exportado (sem valores de campos sensíveis).');
+  }
+
+  async function importConfig(event) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    if (file.size > 1024 * 1024) return toast('Arquivo maior que 1 MB.', true);
+    try {
+      const incoming = Store.parse(JSON.parse(await file.text()));
+      if (!window.confirm('Substituir todo o workspace atual pelo arquivo v6?')) return;
+      Object.assign(state, incoming, {
+        section: 'nmap',
+        search: '',
+        showPasswordCommands: false,
+        showPasswordInput: false
+      });
+      persist();
+      render();
+      toast('Workspace v6 importado.');
+    } catch (error) {
+      toast(error.message || 'Formato JSON inválido.', true);
+    }
+  }
+
+  function resetConfig() {
+    if (!window.confirm('Restaurar Nmap e as ' + BUILTIN_FIELDS.length + ' variáveis vazias? Isso exclui as personalizações do workspace atual.')) return;
+    Object.assign(state, Store.fresh(), {
+      section: 'nmap',
+      search: '',
+      showPasswordCommands: false,
+      showPasswordInput: false
+    });
+    persist();
+    render();
+    toast('Workspace restaurado.');
+  }
+
+  // ─── Eventos e inicialização ───
+  // Delegação de eventos: evita listeners repetidos a cada troca de seção.
+  document.addEventListener('click', event => {
+    const nav = event.target.closest('[data-nav]');
+    if (nav) return setSection(nav.dataset.nav);
+    const action = event.target.closest('[data-action]');
+    if (action) { void handleCardAction(action); return; }
+    const remove = event.target.closest('[data-remove-variable]');
+    if (remove) {
+      const key = remove.dataset.removeVariable;
+      if (!window.confirm('Excluir a variável {{' + key + '}}?')) return;
+      state.customVariables = state.customVariables.filter(v => v.key !== key);
+      delete state.variables[key]; persist(); render(); toast('Variável removida.'); return;
+    }
+    const close = event.target.closest('[data-close-dialog]');
+    if (close) { $(close.dataset.closeDialog)?.close(); return; }
+    const config = event.target.closest('[data-config]');
+    if (config) return config.dataset.config === 'export' ? exportConfig() : $('importInput').click();
+    const button = event.target.closest('button');
+    if (!button) return;
+    if (button.hasAttribute('data-toggle-secret-input')) { state.showPasswordInput = !state.showPasswordInput; renderVariables(); return; }
+    switch (button.id) {
+      case 'addCommand': openCommandDialog(); break;
+      case 'addSection': openSectionDialog(); break;
+      case 'editSection': openSectionDialog(state.section); break;
+      case 'deleteSection': deleteSection(); break;
+      case 'addVariable': openVariableDialog(); break;
+      case 'exportConfig': exportConfig(); break;
+      case 'exportMarkdown': exportMarkdown(); break;
+      case 'importConfig': $('importInput').click(); break;
+      case 'resetConfig': resetConfig(); break;
+      case 'togglePasswordInput': state.showPasswordInput = !state.showPasswordInput; renderVariables(); break;
+      case 'toggleSecrets': state.showPasswordCommands = !state.showPasswordCommands; render(); break;
+      case 'mobileMenu': $('appShell').classList.add('drawer-open'); $('drawerBackdrop').hidden = false; break;
+      default: break;
+    }
+  });
+  document.addEventListener('input', event => {
+    const field = event.target.closest('[data-field]');
+    if (field) {
+      state.variables[field.dataset.field] = field.value;
+      persist(); updateBadge(); updateDerivedPreview(); return;
+    }
+    if (event.target.id === 'variableSearch') { filterVariableCards(event.target.value); return; }
+    if (event.target.id === 'commandSearch') { state.search = event.target.value; drawCards(); }
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { $('appShell').classList.remove('drawer-open'); $('drawerBackdrop').hidden = true; }
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+      if (state.section !== 'variables') { event.preventDefault(); $('commandSearch')?.focus(); }
+    }
+    if (event.key === '/' && !event.ctrlKey && !event.metaKey && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName) && !document.querySelector('dialog[open]')) {
+      const search = $('commandSearch'); if (search) { event.preventDefault(); search.focus(); }
+    }
+  });
+  $('drawerBackdrop').addEventListener('click', () => { $('appShell').classList.remove('drawer-open'); $('drawerBackdrop').hidden = true; });
+  $('commandForm').addEventListener('submit', saveCommand);
+  $('variableForm').addEventListener('submit', saveVariable);
+  $('sectionForm').addEventListener('submit', saveSection);
+  $('sectionLabel').addEventListener('input', () => {
+    if (!state.editingSectionId) $('sectionSlug').value = slugify($('sectionLabel').value);
+  });
+  $('importInput').addEventListener('change', importConfig);
+  for (const dialog of [$('commandDialog'), $('variableDialog'), $('sectionDialog')]) {
+    dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+  }
+  render();
+})();
+
+  </script>
+</body>
+</html>
