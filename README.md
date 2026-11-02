@@ -5,6 +5,7 @@
 **Cheatsheets dinâmicos para laboratórios de cibersegurança e CTF.**
 
 Uma aplicação web estática para organizar comandos, preencher variáveis do laboratório e copiar instruções para o Kali Linux — sem executar comandos no alvo.
+Teste agora: [CTF.Term](https://e-pke.github.io/ctf-term/)
 
 **Português** · [English](README.en.md)
 
