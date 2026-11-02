@@ -6,6 +6,8 @@
 
 A static web application for organizing commands, filling in lab-specific variables, and copying commands for Kali Linux — without executing commands against the target.
 
+[Try CTF.Term](https://e-pke.github.io/ctf-term/)
+
 [Português](README.md) · **English**
 
 </div>
