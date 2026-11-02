@@ -22,9 +22,9 @@
       "users_file": "",
       "pass_wordlist": "/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt",
       "hash_file": "",
-      "file_wordlist": "/usr/share/seclists/Passwords/Discovery/Web-Content/raft-medium-files.txt",
-      "dir_wordlist": "/usr/share/seclists/Passwords/Discovery/Web-Content/raft-medium-directories.txt",
-      "dns_wordlist": "/usr/share/seclists/Passwords/Discovery/DNS/subdomains-top1million-20000.txt",
+      "file_wordlist": "/usr/share/seclists/Discovery/Web-Content/raft-medium-files.txt",
+      "dir_wordlist": "/usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt",
+      "dns_wordlist": "/usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt",
       "share_name": "",
       "spn": "",
       "ca_name": "",
@@ -131,14 +131,14 @@
         "section": "nmap",
         "title": "Escanear todas as portas TCP rapidamente",
         "description": "Varredura inicial das 65.535 portas TCP.",
-        "command": "nmap -p- --open --min-rate 5000 {{ip}}"
+        "command": "nmap -p- --open --min-rate 5000 -Pn {{ip}}"
       },
       {
         "id": "nmap-2",
         "section": "nmap",
         "title": "Identificar serviços, versões e scripts padrão",
         "description": "Use as portas encontradas na primeira etapa.",
-        "command": "nmap -sC -sV -p {{ports_tcp}} {{ip}}"
+        "command": "nmap -sC -sV -p {{ports_tcp}} -Pn {{ip}}"
       },
       {
         "id": "nmap-3",
