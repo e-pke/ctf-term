@@ -801,7 +801,33 @@ button:disabled { cursor: not-allowed; opacity: .46; }
     transition-duration: .01ms !important;
   }
 }
+/* ========================================
+   CTF.Term Nord — Links
+   ======================================== */
 
+body {
+  /* Links internos e externos */
+  --link-color: var(--color-accent);
+  --link-color-hover: var(--color-accent);
+  --link-external-color: var(--color-accent);
+  --link-external-color-hover: var(--color-accent);
+  --link-unresolved-color: var(--color-accent);
+}
+
+/* Links normais, visitados e em hover */
+body a:link,
+body a:visited,
+body a:hover,
+body a:active {
+  color: var(--color-accent) !important;
+}
+
+/* Links no modo de edição (Live Preview) */
+.markdown-source-view.mod-cm6 .cm-link,
+.markdown-source-view.mod-cm6 .cm-url,
+.markdown-source-view.mod-cm6 .cm-hmd-internal-link {
+  color: var(--color-accent) !important;
+}
 </style>
 </head>
 <body>
@@ -821,7 +847,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
         <button class="nav-create" id="addSection" type="button"><span aria-hidden="true">＋</span> Nova categoria</button>
       </div>
 
-      <div class="sidebar-footer">by <a href="https://github.com/e-pke">Єpke</a><br><span class="footer-muted">uso em ambientes autorizados</span></div>
+      <div class="sidebar-footer">by <a href="https://github.com/e-pke/ctf-term">Єpke</a><br><span class="footer-muted">uso em ambientes autorizados</span></div>
     </aside>
 
     <div class="workspace">
