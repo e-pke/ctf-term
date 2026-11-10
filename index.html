@@ -104,9 +104,9 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .brand-mark {
   width: 42px;
   height: 42px;
-  border: 1px solid var(--muted);
+  border: 2px solid var(--surface);
   background: #151414;
-  border-radius: 12px;
+  border-radius: 8px;
   color: var(--white);
   display: grid;
   place-items: center;
@@ -801,32 +801,20 @@ button:disabled { cursor: not-allowed; opacity: .46; }
     transition-duration: .01ms !important;
   }
 }
-/* ========================================
-   CTF.Term Nord — Links
-   ======================================== */
+/* CTF.Term — Links */
 
-body {
-  /* Links internos e externos */
-  --link-color: var(--color-accent);
-  --link-color-hover: var(--color-accent);
-  --link-external-color: var(--color-accent);
-  --link-external-color-hover: var(--color-accent);
-  --link-unresolved-color: var(--color-accent);
+.sidebar-footer a,
+.sidebar-footer a:link,
+.sidebar-footer a:visited,
+.sidebar-footer a:hover,
+.sidebar-footer a:active {
+  color: var(--cyan-ui) !important;
+  text-decoration-color: var(--cyan-ui);
 }
 
-/* Links normais, visitados e em hover */
-body a:link,
-body a:visited,
-body a:hover,
-body a:active {
-  color: var(--color-accent) !important;
-}
-
-/* Links no modo de edição (Live Preview) */
-.markdown-source-view.mod-cm6 .cm-link,
-.markdown-source-view.mod-cm6 .cm-url,
-.markdown-source-view.mod-cm6 .cm-hmd-internal-link {
-  color: var(--color-accent) !important;
+/* Destaque ao passar o mouse */
+.sidebar-footer a:hover {
+  text-decoration: underline;
 }
 </style>
 </head>
@@ -847,7 +835,7 @@ body a:active {
         <button class="nav-create" id="addSection" type="button"><span aria-hidden="true">＋</span> Nova categoria</button>
       </div>
 
-      <div class="sidebar-footer">by <a href="https://github.com/e-pke/ctf-term">Єpke</a><br><span class="footer-muted">uso em ambientes autorizados</span></div>
+      <div class="sidebar-footer">by <a href="https://github.com/e-pke/ctf-term"><b>Єpke</b></a><br><span class="footer-muted">uso em ambientes autorizados</span></div>
     </aside>
 
     <div class="workspace">
