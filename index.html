@@ -801,8 +801,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
     transition-duration: .01ms !important;
   }
 }
-/* CTF.Term — Links */
-
+/* CTF.Term — Links com a cor Accent da aplicação */
 .sidebar-footer a,
 .sidebar-footer a:link,
 .sidebar-footer a:visited,
@@ -812,10 +811,87 @@ button:disabled { cursor: not-allowed; opacity: .46; }
   text-decoration-color: var(--cyan-ui);
 }
 
-/* Destaque ao passar o mouse */
 .sidebar-footer a:hover {
   text-decoration: underline;
 }
+
+/* CTF.Term v6.3 — Command palette / busca global */
+.global-search-trigger { gap: 9px; }
+.global-search-trigger .global-search-trigger-icon { color: var(--cyan-ui); font-size: 17px; line-height: 1; }
+.global-search-trigger kbd {
+  border: 1px solid var(--line); border-radius: 6px;
+  background: rgba(0,0,0,.14); color: var(--muted);
+  font: inherit; font-size: 9px; font-weight: 500; padding: 4px 6px;
+}
+.global-search-dialog {
+  position: fixed; inset: 0; margin: min(13vh, 110px) auto auto;
+  width: min(720px, calc(100vw - 28px)); max-height: min(76dvh, 700px);
+  padding: 0; overflow: hidden; color: var(--fg);
+  background: #272727; border: 1px solid #555; border-radius: 17px;
+  box-shadow: 0 28px 100px rgba(0,0,0,.82);
+}
+.global-search-dialog::backdrop { background: rgba(8,10,12,.78); backdrop-filter: blur(5px); }
+.global-search-layout { display: flex; flex-direction: column; max-height: min(76dvh, 700px); }
+.global-search-input-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 18px; border-bottom: 1px solid var(--line-soft);
+}
+.global-search-icon { font-size: 23px; color: var(--cyan-ui); line-height: 1; }
+.global-search-input {
+  flex: 1; min-width: 0; border: 0; outline: none;
+  color: var(--fg); background: transparent; font-family: var(--font);
+  font-size: 13px; padding: 8px 0;
+}
+.global-search-input::placeholder { color: var(--muted-2); }
+.global-search-close {
+  border: 1px solid var(--line); color: var(--muted); background: rgba(255,255,255,.03);
+  border-radius: 7px; padding: 6px 8px; font-size: 10px; font-weight: 600;
+}
+.global-search-close:hover { color: var(--fg); border-color: var(--cyan-ui); }
+.global-search-summary {
+  padding: 11px 18px 9px; font-size: 10px; color: var(--muted);
+  border-bottom: 1px solid var(--line-soft);
+}
+.global-search-results { min-height: 70px; overflow: auto; overscroll-behavior: contain; padding: 7px; }
+.global-search-result {
+  display: block; width: 100%; text-align: left; font: inherit;
+  padding: 13px 14px; margin: 0; border: 1px solid transparent;
+  border-radius: 10px; background: transparent; color: var(--fg);
+  cursor: pointer;
+}
+.global-search-result:hover, .global-search-result.is-active {
+  border-color: rgba(132,178,195,.34); background: rgba(132,178,195,.10);
+}
+.global-result-top { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.global-result-title { font-size: 12px; font-weight: 700; overflow-wrap: anywhere; }
+.global-result-category {
+  margin-left: auto; flex-shrink: 0; color: var(--cyan-ui);
+  font-size: 10px; font-weight: 600;
+}
+.global-result-desc { margin: 5px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+.global-result-command {
+  margin: 7px 0 0; color: var(--yellow); font-family: var(--font);
+  font-size: 10px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.global-search-empty { padding: 28px 16px; text-align: center; color: var(--muted); font-size: 11px; }
+.global-search-footer {
+  padding: 11px 17px; color: var(--muted-2); font-size: 10px;
+  border-top: 1px solid var(--line-soft); display: flex; gap: 16px; flex-wrap: wrap;
+}
+.global-search-footer kbd { color: var(--fg); font: inherit; }
+.command-card.global-search-target {
+  border-color: var(--cyan-ui); box-shadow: 0 0 0 2px rgba(132,178,195,.16);
+}
+@media (max-width: 740px) {
+  .global-search-dialog { margin-top: 5dvh; max-height: 86dvh; }
+  .global-search-layout { max-height: 86dvh; }
+  .global-search-trigger kbd { display: none; }
+  .global-search-trigger { padding: 10px 12px; }
+  .global-search-input-row { padding: 11px 13px; }
+  .global-result-top { flex-wrap: wrap; }
+  .global-result-category { margin-left: 0; }
+}
+
 </style>
 </head>
 <body>
@@ -825,7 +901,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
         <div class="brand-mark" aria-hidden="true">&gt;_</div>
         <div>
           <div class="brand-title">CTF<span class="accent">.</span>Term</div>
-          <div class="brand-sub">pentest toolkit / v6.2</div>
+          <div class="brand-sub">pentest toolkit / v6.3</div>
         </div>
       </div>
 
@@ -845,6 +921,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
           <div class="breadcrumb">workspace <span class="crumb-slash">/</span> <strong id="breadcrumb">nmap</strong></div>
         </div>
         <div class="header-right">
+          <button type="button" class="button subtle global-search-trigger" id="openGlobalSearch" aria-haspopup="dialog" aria-controls="globalSearchDialog" title="Buscar comandos em todas as categorias (Ctrl+K)"><span class="global-search-trigger-icon" aria-hidden="true">⌕</span><span>Busca global</span><kbd>Ctrl K</kbd></button>
           <div class="target-pill" title="IP atual"><span class="pulse-dot"></span><span id="targetBadge">IP não definido</span></div>
           <div class="status-pill" id="statusRight">PRONTO</div>
           <button class="button subtle hide-small" id="exportConfig" title="Baixar configurações e comandos (sem segredos)">↓ Exportar JSON</button>
@@ -874,6 +951,20 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 
   <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Busca global: consulta todas as categorias, sem alterar o workspace. -->
+  <dialog id="globalSearchDialog" class="global-search-dialog" aria-label="Busca global de comandos">
+    <div class="global-search-layout">
+      <div class="global-search-input-row">
+        <span class="global-search-icon" aria-hidden="true">⌕</span>
+        <input id="globalSearchInput" class="global-search-input" type="search" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="globalSearchResults" aria-label="Pesquisar em todas as categorias" autocomplete="off" spellcheck="false" placeholder="Buscar título, categoria, descrição ou comando...">
+        <button type="button" id="closeGlobalSearch" class="global-search-close" aria-label="Fechar busca global">Esc</button>
+      </div>
+      <div id="globalSearchSummary" class="global-search-summary" aria-live="polite">Pesquise em todas as categorias.</div>
+      <div id="globalSearchResults" class="global-search-results" role="listbox" aria-label="Comandos encontrados"></div>
+      <div class="global-search-footer"><span><kbd>↑ ↓</kbd> navegar</span><span><kbd>Enter</kbd> abrir comando</span><span><kbd>Esc</kbd> fechar</span></div>
+    </div>
+  </dialog>
 
   <dialog id="commandDialog" class="editor-dialog" aria-labelledby="commandDialogTitle">
     <form id="commandForm">
@@ -1243,7 +1334,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
     return { rendered, missing: [...missing] };
   }
   // ─── Destaque de sintaxe / comentários Bash ───
-  const SYNTAX_REGEX = /(\{\{[a-z][a-z0-9_]*\}\}|'(?:[^']*)'|"(?:\\.|[^"\\])*"|(?<![\w-])--?[a-zA-Z][\w-]*|\b(?:nmap|ffuf|nxc|uname|arch|id|w|who|last|route|iptables|ps|chmod|chroot|sh|cp|showmount|su|mysql|tmux|screen|env|systemctl|service|pstree|ls|crontab|find|getcap|mount|df|grep|hostname|docker|hostnamectl|whoami|groups|ip|ifconfig|ss|netstat|arp|socat|proxychains|echo|nc|cat|wget|scp|ssh|base64|john|whatweb|wappalyzer|gobuster|feroxbuster|sqlmap|sudo|git|python3|export|impacket-raiseChild|impacket-ticketer|impacket-smbserver|impacket-smbexec|impacket-dcomexec|impacket-atexec|impacket-addcomputer|impacket-rbcd|certipy-ad|impacket-getST|impacket-findDelegation|rpcclient|impacket-GetNPUsers|impacket-GetUserSPNs|impacket-psexec|impacket-wmiexec|impacket-secretsdump|hashcat|kerbrute|onesixtyone|snmpwalk|evil-winrm|curl|dig|dnsrecon|ldapsearch|netexec|bloodhound-python|enum4linux-ng|xfreerdp3|smbclient|for|do|done|msfvenom|wpscan)\b|[|;&])/g;
+  const SYNTAX_REGEX = /(\{\{[a-z][a-z0-9_]*\}\}|'(?:[^']*)'|"(?:\\.|[^"\\])*"|(?<![\w-])--?[a-zA-Z][\w-]*|\b(?:nmap|ffuf|nxc|uname|arch|id|w|who|last|route|iptables|ps|chmod|chroot|sh|cp|showmount|su|mysql|tmux|screen|env|systemctl|service|pstree|ls|crontab|find|getcap|mount|df|grep|hostname|docker|hostnamectl|whoami|groups|ip|ifconfig|ss|netstat|arp|socat|proxychains|echo|nc|cat|wget|scp|ssh|base64|john|whatweb|wappalyzer|gobuster|feroxbuster|sqlmap|sudo|git|python3|export|impacket-raiseChild|impacket-ticketer|impacket-smbserver|impacket-smbexec|impacket-dcomexec|impacket-atexec|impacket-addcomputer|impacket-rbcd|certipy-ad|impacket-getST|impacket-findDelegation|rpcclient|impacket-GetNPUsers|impacket-GetUserSPNs|impacket-psexec|impacket-wmiexec|impacket-secretsdump|hashcat|kerbrute|onesixtyone|snmpwalk|evil-winrm|curl|dig|dnsrecon|ldapsearch|netexec|bloodhound-python|enum4linux-ng|xfreerdp3|smbclient|for|do|done|msfvenom|wpscan|sed|exec|printf|ping)\b|[|;&])/g;
 
   function highlight(text) {
     // Colore trechos de comandos sem alterar o texto copiado ou executado.
@@ -1428,6 +1519,101 @@ button:disabled { cursor: not-allowed; opacity: .46; }
       <div class="commands-list" id="commandCards"></div>`;
     drawCards();
   }
+
+  // ─── Busca global de comandos (sem alterar o formato dos backups) ───
+  const globalSearchState = { results: [], activeIndex: 0 };
+  const normalizeGlobalText = value => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR');
+
+  function searchAllCommands(query) {
+    const terms = normalizeGlobalText(query).trim().split(/\s+/).filter(Boolean);
+    return state.commands.map((command, order) => {
+      const category = sectionById(command.section);
+      if (!category) return null;
+      const title = normalizeGlobalText(command.title);
+      const description = normalizeGlobalText(command.description);
+      const section = normalizeGlobalText(category.label + ' ' + category.title);
+      const template = normalizeGlobalText(command.command);
+      const fullText = [title, description, section, template].join(' ');
+      if (!terms.every(term => fullText.includes(term))) return null;
+      // Prioriza resultados relevantes sem alterar a ordem dos empates.
+      const score = terms.reduce((total, term) => total
+        + (title.includes(term) ? 6 : 0)
+        + (section.includes(term) ? 3 : 0)
+        + (description.includes(term) ? 2 : 0)
+        + (template.includes(term) ? 1 : 0), 0);
+      return { command, category, order, score };
+    }).filter(Boolean).sort((a, b) => b.score - a.score || a.order - b.order);
+  }
+
+  function globalCommandPreview(template) {
+    const line = String(template).split(/\r?\n/).find(part => part.trim() && !part.trim().startsWith('#')) || template;
+    return String(line).trim().slice(0, 240);
+  }
+
+  function renderGlobalSearch(resetSelection = false) {
+    const input = $('globalSearchInput');
+    globalSearchState.results = searchAllCommands(input.value);
+    if (resetSelection) globalSearchState.activeIndex = 0;
+    const shown = globalSearchState.results.slice(0, 75);
+    globalSearchState.activeIndex = Math.min(globalSearchState.activeIndex, Math.max(shown.length - 1, 0));
+    $('globalSearchSummary').textContent = globalSearchState.results.length + ' resultado(s) em todas as categorias'
+      + (globalSearchState.results.length > shown.length ? ' · exibindo os primeiros ' + shown.length : '');
+    $('globalSearchResults').innerHTML = shown.length ? shown.map(({command, category}, index) => `
+      <button type="button" class="global-search-result${index === globalSearchState.activeIndex ? ' is-active' : ''}"
+        role="option" aria-selected="${index === globalSearchState.activeIndex}" id="globalSearchOption${index}" data-global-index="${index}">
+        <div class="global-result-top">
+          <span class="global-result-title">${escapeHtml(command.title)}</span>
+          <span class="global-result-category">${escapeHtml(category.label)}</span>
+        </div>
+        ${command.description ? `<p class="global-result-desc">${escapeHtml(command.description)}</p>` : ''}
+        <p class="global-result-command">${escapeHtml(globalCommandPreview(command.command))}</p>
+      </button>`).join('') : '<div class="global-search-empty">Nenhum comando encontrado. Experimente outros termos.</div>';
+    input.setAttribute('aria-activedescendant', shown.length ? 'globalSearchOption' + globalSearchState.activeIndex : '');
+    $('globalSearchResults').scrollTop = 0;
+  }
+
+  function openGlobalSearch() {
+    const dialog = $('globalSearchDialog');
+    if (dialog.open) { $('globalSearchInput').focus(); return; }
+    // Não empilha diálogos sobre os editores de comando/categoria/variável.
+    if (document.querySelector('dialog[open]')) return;
+    $('globalSearchInput').value = '';
+    globalSearchState.activeIndex = 0;
+    renderGlobalSearch(true);
+    dialog.showModal();
+    $('globalSearchInput').focus();
+  }
+
+  function moveGlobalSelection(delta) {
+    const count = Math.min(globalSearchState.results.length, 75);
+    if (!count) return;
+    globalSearchState.activeIndex = (globalSearchState.activeIndex + delta + count) % count;
+    $('globalSearchResults').querySelectorAll('[data-global-index]').forEach((element, index) => {
+      const active = index === globalSearchState.activeIndex;
+      element.classList.toggle('is-active', active);
+      element.setAttribute('aria-selected', String(active));
+    });
+    const selected = $('globalSearchOption' + globalSearchState.activeIndex);
+    $('globalSearchInput').setAttribute('aria-activedescendant', selected?.id || '');
+    selected?.scrollIntoView({block:'nearest'});
+  }
+
+  function openGlobalResult(index) {
+    const match = globalSearchState.results[index];
+    if (!match || index >= 75) return;
+    $('globalSearchDialog').close();
+    setSection(match.command.section);
+    // A busca da categoria é independente e é limpa por setSection.
+    const card = [...document.querySelectorAll('[data-command-id]')]
+      .find(item => item.dataset.commandId === match.command.id);
+    if (!card) return;
+    card.classList.add('global-search-target');
+    card.setAttribute('tabindex', '-1');
+    card.focus({preventScroll:true});
+    card.scrollIntoView({block:'center', behavior:'smooth'});
+    window.setTimeout(() => { card.classList.remove('global-search-target'); card.removeAttribute('tabindex'); }, 2500);
+  }
+
   // ─── Editor de comandos, categorias e variáveis ───
   function openCommandDialog(id = null) {
     const existing = id ? state.commands.find(c => c.id === id) : null;
@@ -1663,6 +1849,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
       case 'togglePasswordInput': state.showPasswordInput = !state.showPasswordInput; renderVariables(); break;
       case 'toggleSecrets': state.showPasswordCommands = !state.showPasswordCommands; render(); break;
       case 'mobileMenu': $('appShell').classList.add('drawer-open'); $('drawerBackdrop').hidden = false; break;
+      case 'openGlobalSearch': openGlobalSearch(); break;
       default: break;
     }
   });
@@ -1678,7 +1865,9 @@ button:disabled { cursor: not-allowed; opacity: .46; }
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape') { $('appShell').classList.remove('drawer-open'); $('drawerBackdrop').hidden = true; }
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
-      if (state.section !== 'variables') { event.preventDefault(); $('commandSearch')?.focus(); }
+      event.preventDefault();
+      openGlobalSearch();
+      return;
     }
     if (event.key === '/' && !event.ctrlKey && !event.metaKey && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName) && !document.querySelector('dialog[open]')) {
       const search = $('commandSearch'); if (search) { event.preventDefault(); search.focus(); }
@@ -1695,6 +1884,23 @@ button:disabled { cursor: not-allowed; opacity: .46; }
   for (const dialog of [$('commandDialog'), $('variableDialog'), $('sectionDialog')]) {
     dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
   }
+
+  // Teclado, clique e leitura do campo de busca global.
+  $('globalSearchInput').addEventListener('input', () => renderGlobalSearch(true));
+  $('globalSearchDialog').addEventListener('keydown', event => {
+    if (event.key === 'ArrowDown') { event.preventDefault(); moveGlobalSelection(1); }
+    else if (event.key === 'ArrowUp') { event.preventDefault(); moveGlobalSelection(-1); }
+    else if (event.key === 'Enter') { event.preventDefault(); openGlobalResult(globalSearchState.activeIndex); }
+    else if (event.key === 'Escape') { event.preventDefault(); $('globalSearchDialog').close(); }
+  });
+  $('globalSearchResults').addEventListener('click', event => {
+    const result = event.target.closest('[data-global-index]');
+    if (result) openGlobalResult(Number(result.dataset.globalIndex));
+  });
+  $('closeGlobalSearch').addEventListener('click', () => $('globalSearchDialog').close());
+  $('globalSearchDialog').addEventListener('click', event => {
+    if (event.target === $('globalSearchDialog')) $('globalSearchDialog').close();
+  });
   render();
 })();
 
