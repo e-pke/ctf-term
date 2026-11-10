@@ -229,26 +229,26 @@
         "section": "active-directory",
         "title": "BloodHound Collection",
         "description": "Initial Collection",
-        "command": "# SharpHound (Windows)\n.\\SharpHound.exe -c All -d '{{domain}}' --zipfilename loot.zip\n\n# BloodHound.py (Linux)\nbloodhound-python -d '{{domain}}' -u '{{username}}' -p '{{password}}' -ns {{dc_ip}} -c all\n\n# NetExec BloodHound\nnxc ldap {{ip}} -u '{{username}}' -p '{{password}}' -d '{{domain}}' --bloodhound -ns {{dc_ip}} --collection All"
+        "command": "# SharpHound (Windows)\n.\\SharpHound.exe -c All -d '{{domain}}' --zipfilename loot.zip\n\n# BloodHound.py (Linux)\nbloodhound-python -d '{{domain}}' -u '{{username}}' -p '{{password}}' -ns {{dc_ip}} -c all\n\n# NetExec BloodHound\nnxc ldap {{ip}} -u '{{username}}' -p '{{password}}' -d '{{domain}}' --bloodhound --dns-server {{dc_ip}} --collection All"
       },
       {
         "id": "custom-1793557164804-4i4uax",
         "section": "active-directory",
-        "title": "LDAP Enumeration",
+        "title": "LDAP Enumeration - TCP 389",
         "description": "Initial Enumeration",
         "command": "# Anonymous bind\nldapsearch -x -H ldap://{{ip}} -b '{{base_dn}}'\n\n# Authenticated\nldapsearch -x -H ldap://{{ip}} -D '{{ldap_bind}}' -w '{{password}}' -b '{{base_dn}}'\n\n# Find users\nldapsearch -x -H ldap://{{ip}} -D '{{ldap_bind}}' -w '{{password}}' -b '{{base_dn}}' \"(objectClass=user)\" sAMAccountName\n\n# Find computers\nldapsearch -x -H ldap://{{ip}} -D '{{ldap_bind}}' -w '{{password}}' -b '{{base_dn}}' \"(objectClass=computer)\" name\n\n# NetExec LDAP\nnxc ldap {{ip}} -u '{{username}}' -p '{{password}}' -d '{{domain}}' --users\nnxc ldap {{ip}} -u '{{username}}' -p '{{password}}' -d '{{domain}}' --groups"
       },
       {
         "id": "custom-1793557191160-ezgi3k",
         "section": "active-directory",
-        "title": "SMB Enumeration",
+        "title": "SMB Enumeration - TCP 445",
         "description": "Initial Enumeration",
         "command": "# Null session\nnxc smb {{ip}} -u '' -p '' --shares\nsmbclient -N -L //{{ip}}\n\n# Authenticated shares\nnxc smb {{ip}} -u '{{username}}' -p '{{password}}' --shares\nsmbclient '//{{ip}}/{{share_name}}' -U '{{username}}%{{password}}'\n\n# RID brute force (find users)\nnxc smb {{ip}} -u '' -p '' --rid-brute\n\n# Spider shares for sensitive files\nnxc smb {{ip}} -u '{{username}}' -p '{{password}}' -M spider_plus"
       },
       {
         "id": "custom-1793557218990-rhk29n",
         "section": "active-directory",
-        "title": "RPC Enumeration",
+        "title": "RPC Enumeration - TCP 135",
         "description": "Initial Enumeration",
         "command": "# Null session RPC\nrpcclient -U \"\" -N {{ip}}\nenumdomusers # digitar dentro do console rpcclient\nenumdomgroups # digitar dentro do console rpcclient\nqueryuser 0x1f4 # digitar dentro do console rpcclient\n\n# enum4linux-ng\nenum4linux-ng -A {{ip}}"
       },
